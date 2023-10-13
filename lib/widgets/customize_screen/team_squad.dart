@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lineupmaster/data/models/player_card.dart';
+import 'package:lineupmaster/utils/utils.dart';
 import 'package:lineupmaster/widgets/player_box.dart';
 
 class TeamSquad extends StatefulWidget {
@@ -14,10 +15,26 @@ class TeamSquad extends StatefulWidget {
 
 class _TeamSquadState extends State<TeamSquad> {
 
+  Map<String, ImageProvider> imagesCache = {};
+
   refreshSquad() {
     setState(() {});
   }
   
+  @override
+  void initState() {
+    super.initState();
+
+    // caching images
+    widget.players.forEach((player) {
+      if (player.starterImage != null && !imagesCache.containsKey(player.starterImage)) {
+        ImageProvider image = Image.memory(fromBase64ToByte(player.starterImage!)).image;
+        imagesCache[player.starterImage!] = image;
+      }      
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -40,7 +57,13 @@ class _TeamSquadState extends State<TeamSquad> {
           ),
         ),
         
-        PlayerBox(player: widget.players[0], initialBoxX: 0, initialBoxY: 0, refreshSquad: refreshSquad),
+        PlayerBox(
+          player: widget.players[0], 
+          initialBoxX: 0, 
+          initialBoxY: 0, 
+          refreshSquad: refreshSquad, 
+          imagesCache: imagesCache
+        ),
       
       ] 
     );

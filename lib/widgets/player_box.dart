@@ -13,13 +13,15 @@ class PlayerBox extends StatefulWidget {
   final double initialBoxX ;
   final double initialBoxY ;
   final Function refreshSquad;
+  final Map<String, ImageProvider> imagesCache;
 
   const PlayerBox({
     super.key, 
     required this.player,
     required this.initialBoxX, 
     required this.initialBoxY, 
-    required this.refreshSquad
+    required this.refreshSquad,
+    required this.imagesCache
   });
 
   @override
@@ -33,6 +35,7 @@ class _PlayerBoxState extends State<PlayerBox> {
   double boxY = 0;
   final double boxWidth = 60; 
   late final Database db;
+  
 
   @override
   void initState() {
@@ -51,7 +54,15 @@ class _PlayerBoxState extends State<PlayerBox> {
       context: context,
       builder: (context) => EditPlayerBottomSheet(widget.player, db: db, refreshSquad: widget.refreshSquad)
     );
+  }
 
+  CircleAvatar cachePlayerImage() {
+    PlayerCard player = widget.player;
+    widget.imagesCache[player.starterImage!] = MemoryImage(fromBase64ToByte(player.starterImage!));
+    return CircleAvatar(
+        backgroundImage: widget.imagesCache[player.starterImage!] ,
+        radius: boxWidth / 2,
+     );
   }
 
   @override
@@ -75,11 +86,14 @@ class _PlayerBoxState extends State<PlayerBox> {
           width: boxWidth,
           child: Column(
             children: [
-              if (widget.player.starterImage != null)
-              CircleAvatar(
-                backgroundImage: MemoryImage(fromBase64ToByte(widget.player.starterImage!)) ,
-                radius: boxWidth / 2,
-              ),
+              if (widget.player.starterImage != null && widget.imagesCache[widget.player.starterImage] != null) 
+                CircleAvatar(
+                  backgroundImage:  widget.imagesCache[widget.player.starterImage],
+                  radius: boxWidth / 2,
+                ),
+              if (widget.player.starterImage != null && widget.imagesCache[widget.player.starterImage] == null)                 
+                cachePlayerImage(),
+
               if (widget.player.starterImage == null) 
               CircleAvatar(
                 backgroundImage: const AssetImage("lib/assets/others/no pp.png"),

@@ -29,6 +29,7 @@ class _EditPlayerBottomSheetState extends State<EditPlayerBottomSheet> {
   late TextEditingController backUpNumberController;
   late PlayerCardRepository playerCardRepository;
 
+
   TextStyle inputCustomStyle = const TextStyle(
     letterSpacing: 1.05,
     fontWeight: FontWeight.bold,
