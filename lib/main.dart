@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lineupmaster/main_screen.dart';
 import 'package:lineupmaster/providers/page_index.dart';
 import 'package:lineupmaster/providers/page_screen.dart';
+import 'package:lineupmaster/providers/selected_team.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -10,6 +11,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => PageIndexModel()),
         ChangeNotifierProvider(create: (_) => PageScreenModel()),
+        ChangeNotifierProvider(create: (_) => SelectedTeamModel()),
       ],
       child: const MyApp()
     )

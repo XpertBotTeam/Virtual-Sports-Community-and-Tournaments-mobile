@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lineupmaster/data/models/team.dart';
 import 'package:lineupmaster/providers/page_index.dart';
 import 'package:lineupmaster/providers/page_screen.dart';
+import 'package:lineupmaster/providers/selected_team.dart';
 import 'package:lineupmaster/screens/customize_screen.dart';
 import 'package:lineupmaster/utils/colors.dart';
 import 'package:lineupmaster/utils/utils.dart';
@@ -20,11 +21,13 @@ class FileWidget extends StatelessWidget {
     
     final pageScreenModel = Provider.of<PageScreenModel>(context);
     final pageIndexModel = Provider.of<PageIndexModel>(context); 
+    final selectedTeamModel = Provider.of<SelectedTeamModel>(context); 
 
     return InkWell(
       onTap: () { 
+        selectedTeamModel.updateSelectedTeam(team);
         pageIndexModel.updatePageIndex(0);
-        pageScreenModel.updatePageScreen(CustomizeScreen(team: team));
+        pageScreenModel.updatePageScreen(const CustomizeScreen());
       },
       child: Container(
         height: 50,

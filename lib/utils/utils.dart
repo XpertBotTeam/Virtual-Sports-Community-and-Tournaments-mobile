@@ -3,12 +3,10 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 Uint8List fromBase64ToByte(String base64Image) {
   List<int> bytes = base64Decode(base64Image);
   return Uint8List.fromList(bytes);
 } 
-
 
 
 Future<String?> pickGalleryImage(context) async {

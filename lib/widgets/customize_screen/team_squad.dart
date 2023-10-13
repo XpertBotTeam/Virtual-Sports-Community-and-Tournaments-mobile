@@ -5,7 +5,8 @@ import 'package:lineupmaster/widgets/player_box.dart';
 class TeamSquad extends StatefulWidget {
   
   final List<PlayerCard> players;
-  const TeamSquad({super.key, required this.players});
+  final String themeColor;
+  const TeamSquad({super.key, required this.players, required this.themeColor});
 
   @override
   State<TeamSquad> createState() => _TeamSquadState();
@@ -13,20 +14,24 @@ class TeamSquad extends StatefulWidget {
 
 
 class _TeamSquadState extends State<TeamSquad> {
-
   
   @override
   Widget build(BuildContext context) {
-    print("players: ${widget.players.length}");
     return Stack(
       children:[
         Opacity(
           opacity: 0.5,
           child: Container(
             height: 450,    
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage("lib/assets/pitches/green.png"),
+                image: widget.themeColor == 'green'?
+                    const AssetImage("lib/assets/pitches/green.png") : 
+                      widget.themeColor == 'purple'?
+                        const AssetImage("lib/assets/pitches/purple.webp") :
+                        widget.themeColor == 'blue'?
+                          const AssetImage("lib/assets/pitches/blue.png") :
+                          const AssetImage("lib/assets/pitches/red.png")
               )
             ),        
           ),

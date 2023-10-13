@@ -4,18 +4,18 @@ import 'package:lineupmaster/data/models/team.dart';
 import 'package:lineupmaster/data/repositories/player_card_repository.dart';
 import 'package:lineupmaster/data/repositories/team_repository.dart';
 import 'package:lineupmaster/data/sql_helper.dart';
+import 'package:lineupmaster/providers/selected_team.dart';
 import 'package:lineupmaster/utils/utils.dart';
 import 'package:lineupmaster/widgets/customize_screen/team_info.dart';
 import 'package:lineupmaster/utils/colors.dart';
 import 'package:lineupmaster/widgets/customize_screen/team_squad.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 // ignore: must_be_immutable
 class CustomizeScreen extends StatefulWidget {
 
-  Team? team;
-
-  CustomizeScreen({super.key, this.team}); 
+  const CustomizeScreen({super.key}); 
 
   @override
   State<CustomizeScreen> createState() => _CustomizeScreenState();
@@ -27,12 +27,12 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
   List<PlayerCard>? players;
   bool noTeamFound = false;
   late Database db;
+  Team? selectedTeam;
 
   @override
   void initState() {
     super.initState();
     fetchData();
-    setState(() {});
   }
 
 
@@ -43,17 +43,25 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
     TeamRepository teamRepository = TeamRepository(db);
     PlayerCardRepository playerCardRepository = PlayerCardRepository(db);
 
-    // if no team is passed, we retrieve last team from db
-    widget.team = await teamRepository.getLastTeam();
-    // if team is still null => no team stored in db
-    if (widget.team == null) {
-      noTeamFound = true;
-      return;
-    }
-    print("Team is ${widget.team}");
+    // retrieving selected team from state
+    final selectedTeamModel = Provider.of<SelectedTeamModel>(context, listen: false);
+    selectedTeam = selectedTeamModel.selectedTeam;
+    
+    // if no team is selected previously => app is opening
+    if (selectedTeam == null) {
+      selectedTeam = await teamRepository.getLastTeam();
 
+      // if selected team still equal to null => db has no team
+      if (selectedTeam == null) {
+        noTeamFound = true;
+        return;
+      }
+      else {
+        selectedTeamModel.updateSelectedTeam(selectedTeam);      
+      }
+    } 
     // retrieving team players
-    players = await playerCardRepository.getPlayersByTeamId(widget.team!.teamId!);
+    players = await playerCardRepository.getPlayersByTeamId(selectedTeam!.teamId!);
     setState(() {});
   }
 
@@ -61,12 +69,15 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
   @override
   Widget build(BuildContext context) {
 
+    // to refresh the page whenever selected team updates
+    Provider.of<SelectedTeamModel>(context);
+
     // no team created yet
     if (noTeamFound) {
       return const Center(child: Text("Please create and select a team"));
     }
     // data not loaded yet
-    if (players == null || widget.team == null) {
+    if (players == null || selectedTeam == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -77,7 +88,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
           Center(
             child: Container(
               margin: const EdgeInsets.only(top: 100),
-              child: Image.memory(fromBase64ToByte(widget.team!.teamLogo), width: MediaQuery.of(context).size.width * 0.6),
+              child: Image.memory(fromBase64ToByte(selectedTeam!.teamLogo), width: MediaQuery.of(context).size.width * 0.6),
             ),      
           ),
     
@@ -86,7 +97,12 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
             opacity: 0.9,
             child: Container(
               foregroundDecoration: BoxDecoration(
-                color: greenColor
+                color: selectedTeam!.themeColor == 'green'? 
+                          greenColor :
+                          selectedTeam!.themeColor == 'blue'?
+                            blueColor :
+                              selectedTeam!.themeColor == 'red'?
+                                redColor : purpleColor
               ),
             )
           ),
@@ -94,8 +110,8 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
           // LAYER 3
           ListView(
             children: [
-              TeamInfo(team: widget.team!, players: players!, db: db),
-              TeamSquad(players: players!)
+              TeamInfo(team: selectedTeam!, players: players!, db: db),
+              TeamSquad(players: players!, themeColor: selectedTeam!.themeColor)
             ],
           )
         ],  

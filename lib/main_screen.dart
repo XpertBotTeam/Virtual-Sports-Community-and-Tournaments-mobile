@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:lineupmaster/data/models/team.dart';
 import 'package:lineupmaster/providers/page_index.dart';
 import 'package:lineupmaster/providers/page_screen.dart';
-import 'package:lineupmaster/widgets/navbar/custom_bottom_navbar.dart';
+import 'package:lineupmaster/providers/selected_team.dart';
+import 'package:lineupmaster/screens/customize_screen.dart';
+import 'package:lineupmaster/screens/lineups_screen.dart';
+import 'package:lineupmaster/screens/settings_screen.dart';
+import 'package:lineupmaster/utils/colors.dart';
+import 'package:lineupmaster/widgets/modal_bottom_sheet.dart';
+import 'package:lineupmaster/widgets/navbar/navbar_button.dart';
 import 'package:provider/provider.dart';
 
 class MainScreen extends StatefulWidget {
@@ -21,8 +28,31 @@ class _MainScreenState extends State<MainScreen> {
 
     final pageScreenModel = Provider.of<PageScreenModel>(context);
     final pageIndexModel = Provider.of<PageIndexModel>(context); 
-   
-    void onBtnClick(int index, Widget? screen) {
+    final selectedTeamModel = Provider.of<SelectedTeamModel>(context);    
+
+    openChoosePitchDialog() {
+      Team? selectedTeam = selectedTeamModel.selectedTeam;
+
+      if (selectedTeam == null) {
+        return;
+      }
+
+      showModalBottomSheet(
+        context: context, 
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(20)
+          )
+        ),
+        backgroundColor: creamColor,
+        builder: (context) {
+          return ModalBottomSheet(selectedTeam: selectedTeam, selectedTeamModel: selectedTeamModel);
+        });
+
+    }
+
+
+    void modifyScreenStates(int index, Widget? screen) {
       pageIndexModel.updatePageIndex(index);
       if (screen != null) {
         pageScreenModel.updatePageScreen(screen);
@@ -35,7 +65,48 @@ class _MainScreenState extends State<MainScreen> {
         child: pageScreenModel.pageScreen,
       ),
 
-      bottomNavigationBar: CustomBottomNavbar(onBtnClick)
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        child: Container(
+          color: secondaryColor,
+          height: MediaQuery.of(context).size.height * 0.09,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              NavBarButton(
+                fileName: "home.svg", 
+                label: "Home", 
+                onPressed: () => modifyScreenStates(0, const CustomizeScreen()),
+                isSelected: pageIndexModel.pageIndex == 0,
+              ),
+
+              NavBarButton(
+                fileName: "line up.svg", 
+                label: "Line Ups",
+                onPressed: () => modifyScreenStates(1, const LineUpsScreen()),
+                isSelected: pageIndexModel.pageIndex == 1,
+              ),
+
+              NavBarButton(
+                fileName: "football field.svg", 
+                label: "Pitches",
+                onPressed: () { 
+                  modifyScreenStates(2, null);
+                  openChoosePitchDialog();                
+                },
+                isSelected: pageIndexModel.pageIndex == 2,
+              ),
+
+              NavBarButton(
+                fileName: "settings.svg", 
+                label: "Settings",
+                onPressed: () => modifyScreenStates(3, const SettingsScreen()),
+                isSelected: pageIndexModel.pageIndex == 3,
+              ),
+            ]
+          ),
+        )
+      ) 
     );
   }
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:lineupmaster/data/models/team.dart';
+import 'package:lineupmaster/providers/selected_team.dart';
+import 'package:provider/provider.dart';
 import '../../utils/colors.dart';
 
 class NavBarButton extends StatelessWidget {
@@ -14,13 +17,41 @@ class NavBarButton extends StatelessWidget {
     required fileName, 
     required label, 
     required onPressed, 
-    required isSelected
+    required isSelected,
   }) 
     : _fileName = fileName , _label = label , _onPressed = onPressed, _isSelected = isSelected;
 
-
+ 
   @override
   Widget build(BuildContext context) {
+
+    final selectedTeamModel = Provider.of<SelectedTeamModel>(context);    
+    Team? selectedTeam = selectedTeamModel.selectedTeam;
+
+    Color getButtonColor() {
+      
+      if (selectedTeam == null) {
+        if (_isSelected) {
+          return primaryColor;
+        }
+        else {
+          return blackColor;
+        }
+      }
+      else {
+        String themeColor = selectedTeam.themeColor;
+        if (themeColor == 'green') {
+          return primaryColor;
+        }
+        else if (themeColor == 'blue') {
+          return blueColor;
+        }
+        else if (themeColor == 'red') {
+          return redColor;
+        }
+        return purpleColor;
+      }
+    }
     
     return ElevatedButton(
       style: const ButtonStyle(
@@ -36,12 +67,12 @@ class NavBarButton extends StatelessWidget {
             'lib/assets/icons/$_fileName',
             height: 33,
             width: 33,
-            color: _isSelected ? primaryColor : blackColor,
+            color: !_isSelected ? blackColor : getButtonColor(),
           ),
           Text(
             _label,
             style: TextStyle(
-              color: _isSelected ? primaryColor : blackColor,
+              color: !_isSelected ? blackColor : getButtonColor(),
               fontWeight: FontWeight.bold
             ),
           )
