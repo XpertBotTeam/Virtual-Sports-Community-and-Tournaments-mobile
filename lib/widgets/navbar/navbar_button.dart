@@ -31,12 +31,7 @@ class NavBarButton extends StatelessWidget {
     Color getButtonColor() {
       
       if (selectedTeam == null) {
-        if (_isSelected) {
-          return primaryColor;
-        }
-        else {
           return blackColor;
-        }
       }
       else {
         String themeColor = selectedTeam.themeColor;

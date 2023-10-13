@@ -8,8 +8,9 @@ class CircleAvatarWithButton extends StatelessWidget {
   final Function onTap;
   final double radius;
   final double buttonSize;
+  final bool playerBox;
   
-  const CircleAvatarWithButton({super.key, this.byteImage, required this.onTap, this.radius = 35, this.buttonSize = 25});
+  const CircleAvatarWithButton({super.key, this.byteImage, required this.onTap, this.radius = 35, this.buttonSize = 25, this.playerBox = false});
 
   @override
   Widget build(BuildContext context) {
@@ -17,17 +18,24 @@ class CircleAvatarWithButton extends StatelessWidget {
       child: Stack(
         children: [
           GestureDetector(
-            onTap: () { onTap(context);} ,
+            onTap: () => onTap(context),
             child: 
               byteImage == null ?
-            CircleAvatar(
-                backgroundImage: const AssetImage("lib/assets/others/no image.jpg"),
-                radius: radius
-            ) :
-            CircleAvatar(
-                backgroundImage: MemoryImage(byteImage!),
-                radius: radius
-            )
+                playerBox ? 
+                  CircleAvatar(
+                    backgroundImage: const AssetImage("lib/assets/others/no pp.png"),
+                    radius: radius,  
+                  )
+                :
+                  CircleAvatar(
+                      backgroundImage: const AssetImage("lib/assets/others/no image.jpg"),
+                      radius: radius
+                  ) 
+              :
+              CircleAvatar(
+                  backgroundImage: MemoryImage(byteImage!),
+                  radius: radius
+              )
           ),
           Positioned(
             right: 0,

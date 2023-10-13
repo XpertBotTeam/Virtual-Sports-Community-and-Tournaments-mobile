@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:lineupmaster/utils/colors.dart';
 
 class CustomTextField extends StatelessWidget {
   
   final TextEditingController textEditingController;
   final bool shiny;
+  final Color? color;
+  final Function? onChange;
+  final bool numeric ;
 
-  const CustomTextField(this.textEditingController, {super.key, this.shiny = true});
+  const CustomTextField(this.textEditingController, {super.key, this.shiny = true, this.color, this.onChange, this.numeric = false});
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +28,20 @@ class CustomTextField extends StatelessWidget {
           ),
         ],
         borderRadius: BorderRadius.circular(10.0),
-        color: lightGray,
+        color: color ?? lightGray,
       ),
       child: TextField(
         controller: textEditingController,
+        onChanged: (value) {
+          if (onChange != null) {
+            onChange!(value);
+          }
+        },
+        inputFormatters: numeric? 
+          <TextInputFormatter>[
+            FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')),
+          ] :
+          null ,
         decoration: const InputDecoration(
           isDense: true,
           contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),

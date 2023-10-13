@@ -12,8 +12,11 @@ class TeamSquad extends StatefulWidget {
   State<TeamSquad> createState() => _TeamSquadState();
 }
 
-
 class _TeamSquadState extends State<TeamSquad> {
+
+  refreshSquad() {
+    setState(() {});
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class _TeamSquadState extends State<TeamSquad> {
           ),
         ),
         
-        PlayerBox(player: widget.players[0], boxWidth: MediaQuery.of(context).size.width * 0.15 , initialBoxX: 0, initialBoxY: 0),
+        PlayerBox(player: widget.players[0], initialBoxX: 0, initialBoxY: 0, refreshSquad: refreshSquad),
       
       ] 
     );

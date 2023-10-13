@@ -7,7 +7,7 @@ import 'package:lineupmaster/screens/customize_screen.dart';
 import 'package:lineupmaster/screens/lineups_screen.dart';
 import 'package:lineupmaster/screens/settings_screen.dart';
 import 'package:lineupmaster/utils/colors.dart';
-import 'package:lineupmaster/widgets/modal_bottom_sheet.dart';
+import 'package:lineupmaster/widgets/dialogs/pitch_bottom_sheet.dart';
 import 'package:lineupmaster/widgets/navbar/navbar_button.dart';
 import 'package:provider/provider.dart';
 
@@ -46,7 +46,7 @@ class _MainScreenState extends State<MainScreen> {
         ),
         backgroundColor: creamColor,
         builder: (context) {
-          return ModalBottomSheet(selectedTeam: selectedTeam, selectedTeamModel: selectedTeamModel);
+          return PitchBottomSheet(selectedTeam: selectedTeam, selectedTeamModel: selectedTeamModel);
         });
 
     }
@@ -91,7 +91,6 @@ class _MainScreenState extends State<MainScreen> {
                 fileName: "football field.svg", 
                 label: "Pitches",
                 onPressed: () { 
-                  modifyScreenStates(2, null);
                   openChoosePitchDialog();                
                 },
                 isSelected: pageIndexModel.pageIndex == 2,

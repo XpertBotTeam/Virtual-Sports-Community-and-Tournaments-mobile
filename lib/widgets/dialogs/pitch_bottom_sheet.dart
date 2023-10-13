@@ -7,18 +7,18 @@ import 'package:lineupmaster/utils/colors.dart';
 import 'package:lineupmaster/widgets/pitch_options.dart';
 import 'package:sqflite/sqflite.dart';
 
-class ModalBottomSheet extends StatefulWidget {
+class PitchBottomSheet extends StatefulWidget {
 
   final SelectedTeamModel selectedTeamModel;
   final Team selectedTeam;
 
-  const ModalBottomSheet({super.key, required this.selectedTeamModel, required this.selectedTeam});
+  const PitchBottomSheet({super.key, required this.selectedTeamModel, required this.selectedTeam});
 
   @override
-  State<ModalBottomSheet> createState() => _ModalBottomSheetState();
+  State<PitchBottomSheet> createState() => _PitchBottomSheetState();
 }
 
-class _ModalBottomSheetState extends State<ModalBottomSheet> {
+class _PitchBottomSheetState extends State<PitchBottomSheet> {
 
   changeThemeColor(String color) async {
     Team team = widget.selectedTeamModel.selectedTeam!;

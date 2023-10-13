@@ -11,9 +11,9 @@ class SettingsButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    
     double generalPaddingLeft = MediaQuery.of(context).size.width / 16;
-
+    
     return Container(
           width: double.infinity,
           height: 45,

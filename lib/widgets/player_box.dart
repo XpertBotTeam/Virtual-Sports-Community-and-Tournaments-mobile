@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lineupmaster/data/models/player_card.dart';
+import 'package:lineupmaster/data/sql_helper.dart';
 import 'package:lineupmaster/utils/colors.dart';
+import 'package:lineupmaster/utils/utils.dart';
+import 'package:lineupmaster/widgets/dialogs/editplayer_bottom_sheet.dart';
+import 'package:sqflite/sqflite.dart';
 
 
 class PlayerBox extends StatefulWidget {
@@ -8,14 +12,14 @@ class PlayerBox extends StatefulWidget {
   final PlayerCard player;
   final double initialBoxX ;
   final double initialBoxY ;
-  final double boxWidth;
+  final Function refreshSquad;
 
   const PlayerBox({
     super.key, 
     required this.player,
     required this.initialBoxX, 
     required this.initialBoxY, 
-    required this.boxWidth
+    required this.refreshSquad
   });
 
   @override
@@ -27,14 +31,27 @@ class _PlayerBoxState extends State<PlayerBox> {
 
   double boxX = 0;
   double boxY = 0;
-  double boxWidth = 0;
+  final double boxWidth = 60; 
+  late final Database db;
 
   @override
   void initState() {
     super.initState();
     boxX = widget.initialBoxX;
     boxY = widget.initialBoxY;
-    boxWidth = widget.boxWidth;
+    loadDb();
+  }
+
+  loadDb() async {
+    db = await SQLHelper.db();
+  }
+
+  openEditPlayerDialog() async {
+    showDialog(
+      context: context,
+      builder: (context) => EditPlayerBottomSheet(widget.player, db: db, refreshSquad: widget.refreshSquad)
+    );
+
   }
 
   @override
@@ -53,43 +70,59 @@ class _PlayerBoxState extends State<PlayerBox> {
           }  
           setState(() {});
         },
+        onTap: () => openEditPlayerDialog(),
         child: SizedBox(
           width: boxWidth,
           child: Column(
             children: [
+              if (widget.player.starterImage != null)
               CircleAvatar(
-                backgroundImage: const NetworkImage("https://www.thesun.co.uk/wp-content/uploads/2023/05/crop-22459323.jpg?w=620"),
+                backgroundImage: MemoryImage(fromBase64ToByte(widget.player.starterImage!)) ,
                 radius: boxWidth / 2,
               ),
+              if (widget.player.starterImage == null) 
+              CircleAvatar(
+                backgroundImage: const AssetImage("lib/assets/others/no pp.png"),
+                radius: boxWidth / 2,
+              ),
+              
+              const SizedBox(height: 5),
               Container(
                 width: double.infinity,
-                height: boxWidth / 5,
+                height: boxWidth / 4,
                 color: lightGray,
-                child: const Center(
+                child: Center(
                   child: Text(
-                    "Ter Stegen",
-                    style: TextStyle(
+                     widget.player.starterNo != null? 
+                        "${widget.player.starterNo!}. ${widget.player.starterName}" :
+                        widget.player.starterName,
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: 12
+                      fontSize: 10
                     ),
                   )
                 ),
               ) ,
               const SizedBox(height: 3) ,
-              Container(
-                width: double.infinity,
-                height: boxWidth / 5,
-                color: darkGray,
-                child: const Center(
-                  child: Text(
-                    "Pena",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12
-                    ),
-                  )
-                ),
-              ) ,
+
+              // back up name box should only appear if there a is a back up
+              if (widget.player.backupName != null && widget.player.backupName != "") 
+                Container(
+                  width: double.infinity,
+                  height: boxWidth / 4,
+                  color: darkGray,
+                  child: Center(
+                    child: Text(
+                      widget.player.backupNo != null? 
+                        "${widget.player.backupNo!}. ${widget.player.backupName!}" :
+                        widget.player.backupName!,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 11
+                      ),
+                    )
+                  ),
+                ) ,
             ],
           ),
         ),
