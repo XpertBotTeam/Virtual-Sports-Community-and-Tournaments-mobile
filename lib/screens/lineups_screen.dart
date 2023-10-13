@@ -5,6 +5,7 @@ import 'package:lineupmaster/data/models/team.dart';
 import 'package:lineupmaster/data/repositories/folder_repository.dart';
 import 'package:lineupmaster/data/repositories/team_repository.dart';
 import 'package:lineupmaster/data/sql_helper.dart';
+import 'package:lineupmaster/providers/page_screen.dart';
 import 'package:lineupmaster/screens/create_team_screen.dart';
 import 'package:lineupmaster/utils/colors.dart';
 import 'package:lineupmaster/utils/utils.dart';
@@ -13,6 +14,7 @@ import 'package:lineupmaster/widgets/dialogs/create_folder_dialog.dart';
 import 'package:lineupmaster/widgets/lineupscreen/file_widget.dart';
 import 'package:lineupmaster/widgets/lineupscreen/folder_widget.dart';
 import 'package:lineupmaster/widgets/section_title.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LineUpsScreen extends StatefulWidget {
@@ -83,6 +85,8 @@ class _LineUpsScreenState extends State<LineUpsScreen> {
   @override
   Widget build(BuildContext context) {
 
+    final pageScreenModel = Provider.of<PageScreenModel>(context);
+
     if (folders == null || teams == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -112,15 +116,11 @@ class _LineUpsScreenState extends State<LineUpsScreen> {
                   InkWell(
                     onTap: () {
                       if (selectedFolders.isNotEmpty) {
-                        setState(() {
-                            createFileInsideFolderRequested = true;
-                        });
+                        setState(() => createFileInsideFolderRequested = true);
                       }
                       else {
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context) => const CreateTeamScreen())); 
-                        }
+                        pageScreenModel.updatePageScreen(const CreateTeamScreen());
+                      }                        
                     } ,
                     child: SvgPicture.asset(
                       "lib/assets/icons/add file.svg",

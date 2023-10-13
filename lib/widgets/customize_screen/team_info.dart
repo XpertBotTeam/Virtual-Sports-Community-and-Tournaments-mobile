@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lineupmaster/data/models/player_card.dart';
 import 'package:lineupmaster/data/models/team.dart';
 import 'package:lineupmaster/data/repositories/team_repository.dart';
+import 'package:lineupmaster/providers/page_screen.dart';
+import 'package:lineupmaster/screens/create_team_screen.dart';
 import 'package:lineupmaster/utils/colors.dart';
 import 'package:lineupmaster/utils/utils.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class TeamInfo extends StatefulWidget {
@@ -24,10 +27,11 @@ class _TeamInfoState extends State<TeamInfo> {
   @override
   Widget build(BuildContext context) {
 
-    final TextEditingController teamNameController = TextEditingController(text: widget.team.teamName.toUpperCase());
-    final TextEditingController teamManagerNameController = TextEditingController(text: widget.team.managerName);
-    final TextEditingController teamSubtitleController= TextEditingController(text: widget.team.teamSubtitle ?? "Subtitle");
-    final TeamRepository teamRepository = TeamRepository(widget.db);
+    final pageScreenModel = Provider.of<PageScreenModel>(context);
+    TextEditingController teamNameController = TextEditingController(text: widget.team.teamName);
+    TextEditingController teamManagerNameController = TextEditingController(text: widget.team.managerName);
+    TextEditingController teamSubtitleController= TextEditingController(text: widget.team.teamSubtitle ?? "Subtitle");
+    TeamRepository teamRepository = TeamRepository(widget.db);
 
     updateTeamName(newName) async {
       widget.team.teamName = newName;
@@ -61,6 +65,7 @@ class _TeamInfoState extends State<TeamInfo> {
         setState(() {});
       }
     }
+
 
     return SizedBox(
       width: double.infinity,
@@ -105,7 +110,9 @@ class _TeamInfoState extends State<TeamInfo> {
                 right: 20,
                 top: 10,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    pageScreenModel.updatePageScreen(const CreateTeamScreen());
+                  },
                   child: Container(
                     width: MediaQuery.of(context).size.width * 0.07,
                     alignment: Alignment.center,

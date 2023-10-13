@@ -32,7 +32,7 @@ class _TeamSquadState extends State<TeamSquad> {
           ),
         ),
         
-        PlayerBox(boxWidth: MediaQuery.of(context).size.width * 0.15 , initialBoxX: 0, initialBoxY: 0),
+        PlayerBox(player: widget.players[0], boxWidth: MediaQuery.of(context).size.width * 0.15 , initialBoxX: 0, initialBoxY: 0),
       
       ] 
     );

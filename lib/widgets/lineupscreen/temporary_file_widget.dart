@@ -37,7 +37,7 @@ class _TemporaryFileWidgetState extends State<TemporaryFileWidget> {
   pickImage(context) async {
     String? imageB64 = await pickGalleryImage(context);
     if (imageB64 != null) {
-      setState(() { selectedImage = fromBase64ToByte(imageB64); });
+      setState(() => selectedImage = fromBase64ToByte(imageB64));
     }
   }
 
