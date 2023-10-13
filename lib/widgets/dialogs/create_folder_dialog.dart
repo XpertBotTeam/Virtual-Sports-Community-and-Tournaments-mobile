@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lineupmaster/data/models/folder.dart';
 import 'package:lineupmaster/data/repositories/folder_repository.dart';
+import 'package:lineupmaster/data/sql_helper.dart';
 import 'package:lineupmaster/utils/colors.dart';
 import 'package:lineupmaster/utils/utils.dart';
 import 'package:lineupmaster/widgets/circleavatar_with_button.dart';
@@ -37,7 +38,8 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
     else {
       errMsg = "";
       Folder folder = Folder(folderName: folderNameController.text, folderLogo: base64Encode(selectedImage!));
-      FolderRepository.insertFolder(folder);
+      FolderRepository folderRepository = FolderRepository(await SQLHelper.db());
+      folderRepository.insertFolder(folder);
       Navigator.pop(context);
     }
     // to re-render the widget since there are variables that may have have changed
@@ -116,7 +118,7 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: primaryColor            
                     ) ,
-                    onPressed: () { createFolder(); }, 
+                    onPressed: () async => await createFolder(), 
                       child: const Text("Create")
                     ),
                   ] 

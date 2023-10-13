@@ -6,8 +6,10 @@ class CircleAvatarWithButton extends StatelessWidget {
 
   final Uint8List? byteImage;
   final Function onTap;
+  final double radius;
+  final double buttonSize;
   
-  const CircleAvatarWithButton({super.key, this.byteImage, required this.onTap});
+  const CircleAvatarWithButton({super.key, this.byteImage, required this.onTap, this.radius = 35, this.buttonSize = 25});
 
   @override
   Widget build(BuildContext context) {
@@ -18,21 +20,21 @@ class CircleAvatarWithButton extends StatelessWidget {
             onTap: () { onTap(context);} ,
             child: 
               byteImage == null ?
-            const CircleAvatar(
-                backgroundImage: AssetImage("lib/assets/others/no image.jpg"),
-                radius: 35
+            CircleAvatar(
+                backgroundImage: const AssetImage("lib/assets/others/no image.jpg"),
+                radius: radius
             ) :
             CircleAvatar(
                 backgroundImage: MemoryImage(byteImage!),
-                radius: 35
+                radius: radius
             )
           ),
           Positioned(
             right: 0,
             bottom: 0,
             child: SizedBox(
-              height: 25,
-              width: 25,
+              height: buttonSize,
+              width: buttonSize,
               child: ElevatedButton(
                 onPressed: () { onTap(context); }, 
                 style: ElevatedButton.styleFrom(

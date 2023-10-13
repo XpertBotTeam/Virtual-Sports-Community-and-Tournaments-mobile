@@ -3,17 +3,19 @@ class PlayerCard {
   int? cardId;
   String? starterImage;
   String starterName;
-  int starterNo;
+  int? starterNo;
   String? backupName;
+  int? backupNo;
   int teamId;
 
   PlayerCard({
+    required this.teamId,
     this.cardId,
     this.starterImage,
-    required this.starterName,
-    required this.starterNo,
-    required this.backupName,
-    required this.teamId,
+    this.starterName = "Player Name",
+    this.starterNo,
+    this.backupName,
+    this.backupNo,
   });
 
   // Convert a PlayerCard object to a map for database operations.
@@ -24,6 +26,7 @@ class PlayerCard {
       'starter_name': starterName,
       'starter_no': starterNo,
       'backup_name': backupName,
+      'backup_no': backupNo,
       'team_id': teamId,
     };
   }
@@ -36,13 +39,23 @@ class PlayerCard {
       starterName: map['starter_name'],
       starterNo: map['starter_no'],
       backupName: map['backup_name'],
+      backupNo: map['backup_no'],
       teamId: map['team_id'],
     );
   }
 
   @override
   String toString() {
-    return 'PlayerCard { cardId: $cardId, starterImage: $starterImage, starterName: $starterName, starterNo: $starterNo, backupName: $backupName, teamId: $teamId }';
+    return """PlayerCard { 
+      cardId: $cardId, 
+      starterImage: $starterImage, 
+      starterName: $starterName, 
+      starterNo: $starterNo, 
+      backupName: $backupName, 
+      backupNo: $backupNo, 
+      teamId: $teamId 
+    }
+    """;
   }
 
 }

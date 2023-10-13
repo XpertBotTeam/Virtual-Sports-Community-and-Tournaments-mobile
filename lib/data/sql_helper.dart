@@ -8,6 +8,7 @@ class SQLHelper {
 
   static const String DB_NAME = "lineupmaster.db";
 
+
   static Future<sql.Database> db() async {
 
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -15,10 +16,15 @@ class SQLHelper {
 
     return sql.openDatabase(
       path,
-      version: 1,
+      version: 2,
       onCreate: (sql.Database database, int version) async {
         await createTables(database);
-      }
+      },
+      onUpgrade: (sql.Database database, int oldVersion, int newVersion) async {
+        if (oldVersion < 2) {
+          await database.execute("ALTER TABLE player_card ADD COLUMN backup_no INT");
+        }
+      },
     ); 
   }
 

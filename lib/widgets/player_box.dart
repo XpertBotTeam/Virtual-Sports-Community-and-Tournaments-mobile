@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:lineupmaster/data/models/player_card.dart';
 import 'package:lineupmaster/utils/colors.dart';
 
 class PlayerBox extends StatefulWidget {
   
+  // final PlayerCard player;
   final double initialBoxX ;
   final double initialBoxY ;
   final double boxWidth;
 
-  const PlayerBox({super.key, required this.initialBoxX, required this.initialBoxY, required this.boxWidth});
+  const PlayerBox({
+    super.key, 
+    // required this.player,
+    required this.initialBoxX, 
+    required this.initialBoxY, 
+    required this.boxWidth
+  });
 
   @override
   State<PlayerBox> createState() => _PlayerBoxState();
@@ -42,9 +50,7 @@ class _PlayerBoxState extends State<PlayerBox> {
           if (boxY + details.delta.dy >= 0) {
             boxY += details.delta.dy;              
           }  
-          setState(() {          
-          });
-          // print("boxX: $boxX and boxY: $boxY");
+          setState(() {});
         },
         child: SizedBox(
           width: boxWidth,

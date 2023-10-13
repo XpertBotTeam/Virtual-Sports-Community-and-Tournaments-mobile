@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lineupmaster/data/models/player_card.dart';
 import 'package:lineupmaster/widgets/player_box.dart';
 
 class TeamSquad extends StatefulWidget {
-  const TeamSquad({super.key});
+  
+  final List<PlayerCard> players;
+  const TeamSquad({super.key, required this.players});
 
   @override
   State<TeamSquad> createState() => _TeamSquadState();
@@ -10,9 +13,11 @@ class TeamSquad extends StatefulWidget {
 
 
 class _TeamSquadState extends State<TeamSquad> {
+
   
   @override
   Widget build(BuildContext context) {
+    print("players: ${widget.players.length}");
     return Stack(
       children:[
         Opacity(
@@ -26,18 +31,9 @@ class _TeamSquadState extends State<TeamSquad> {
             ),        
           ),
         ),
+        
         PlayerBox(boxWidth: MediaQuery.of(context).size.width * 0.15 , initialBoxX: 0, initialBoxY: 0),
-        // PlayerBox(boxWidth: MediaQuery.of(context).size.width * 0.15),
-        // PlayerBox(boxWidth: MediaQuery.of(context).size.width * 0.15),
-        // PlayerBox(boxWidth: MediaQuery.of(context).size.width * 0.15),
-        // PlayerBox(boxWidth: MediaQuery.of(context).size.width * 0.15),
-        // PlayerBox(boxWidth: MediaQuery.of(context).size.width * 0.15),
-        // PlayerBox(boxWidth: MediaQuery.of(context).size.width * 0.15),
-        // PlayerBox(boxWidth: MediaQuery.of(context).size.width * 0.15),
-        // PlayerBox(boxWidth: MediaQuery.of(context).size.width * 0.15),
-        // PlayerBox(boxWidth: MediaQuery.of(context).size.width * 0.15),
-        // PlayerBox(boxWidth: MediaQuery.of(context).size.width * 0.15),
-        // const PlayerBox(initialBoxX: 95, initialBoxY: 45)
+      
       ] 
     );
   }

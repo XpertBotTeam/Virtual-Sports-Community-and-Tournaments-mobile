@@ -4,6 +4,7 @@ import 'package:lineupmaster/data/models/folder.dart';
 import 'package:lineupmaster/data/models/team.dart';
 import 'package:lineupmaster/data/repositories/folder_repository.dart';
 import 'package:lineupmaster/data/repositories/team_repository.dart';
+import 'package:lineupmaster/data/sql_helper.dart';
 import 'package:lineupmaster/screens/create_team_screen.dart';
 import 'package:lineupmaster/utils/colors.dart';
 import 'package:lineupmaster/utils/utils.dart';
@@ -12,6 +13,7 @@ import 'package:lineupmaster/widgets/dialogs/create_folder_dialog.dart';
 import 'package:lineupmaster/widgets/lineupscreen/file_widget.dart';
 import 'package:lineupmaster/widgets/lineupscreen/folder_widget.dart';
 import 'package:lineupmaster/widgets/section_title.dart';
+import 'package:sqflite/sqflite.dart';
 
 class LineUpsScreen extends StatefulWidget {
   const LineUpsScreen({super.key});
@@ -52,8 +54,13 @@ class _LineUpsScreenState extends State<LineUpsScreen> {
 
 
   fetchData() async {
-    folders = await FolderRepository.getFolders();
-    teams = await TeamRepository.getIndependentTeams();
+
+    final Database db = await SQLHelper.db();
+    final FolderRepository folderRepository = FolderRepository(db);
+    final TeamRepository teamRepository = TeamRepository(db);
+
+    folders = await folderRepository.getFolders();
+    teams = await teamRepository.getIndependentTeams();
 
     // caching folder images
     folders?.forEach((folder) {

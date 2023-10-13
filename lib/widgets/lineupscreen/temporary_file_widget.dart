@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:lineupmaster/data/models/team.dart';
 import 'package:lineupmaster/data/repositories/team_repository.dart';
+import 'package:lineupmaster/data/sql_helper.dart';
 import 'package:lineupmaster/utils/colors.dart';
 import 'package:lineupmaster/utils/utils.dart';
 import 'package:lineupmaster/data/models/folder.dart';
@@ -40,15 +41,15 @@ class _TemporaryFileWidgetState extends State<TemporaryFileWidget> {
     }
   }
 
-  saveFile() {
+  saveFile() async {
     if (teamNameController.text != "" && selectedImage != null) {
       Team team = Team(
-        teamLogo: base64Encode(selectedImage!), 
-        teamSubtitle: "", 
+        teamLogo: base64Encode(selectedImage!),  
         teamName: teamNameController.text,
         folderId: widget.folder.folderId
       );
-      TeamRepository.insertTeam(team);
+      TeamRepository teamRepository = TeamRepository(await SQLHelper.db());
+      teamRepository.insertTeam(team);
       widget.updateCreateFileRequested(false);
       widget.fetchData();
     }

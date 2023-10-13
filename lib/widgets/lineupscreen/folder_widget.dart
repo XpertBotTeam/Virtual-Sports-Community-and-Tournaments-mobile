@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lineupmaster/data/models/folder.dart';
 import 'package:lineupmaster/utils/colors.dart';
+import 'package:lineupmaster/utils/utils.dart';
 import 'package:lineupmaster/widgets/lineupscreen/file_widget.dart';
 import 'package:lineupmaster/widgets/lineupscreen/temporary_file_widget.dart';
 
@@ -27,8 +28,6 @@ class FolderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    // print("state: ${selectedFolders}");
 
     return Container(
       decoration: BoxDecoration(
@@ -67,7 +66,11 @@ class FolderWidget extends StatelessWidget {
         title: ListTile(
           dense: true,
           visualDensity: const VisualDensity(vertical: -2),
-          leading: Image(image: imagesCache[folder.folderLogo]!),  
+          leading:
+          imagesCache[folder.folderLogo] != null ?  
+              Image(image: imagesCache[folder.folderLogo]!, height: 38, width: 35, fit: BoxFit.cover,) :
+              Image(image: MemoryImage(fromBase64ToByte(folder.folderLogo)), height: 38, width: 38, fit: BoxFit.cover,),
+          
           title: Text(
             folder.folderName, 
             style: const TextStyle(
@@ -79,6 +82,7 @@ class FolderWidget extends StatelessWidget {
         children: [
           Column(
             children: [    
+              if (folder.teams != null) 
               ...folder.teams!.map((team) {
                 return FileWidget(team, imagesCache: imagesCache, insideFolder: true,);
               }),

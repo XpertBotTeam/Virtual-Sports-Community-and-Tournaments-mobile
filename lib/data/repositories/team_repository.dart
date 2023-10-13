@@ -1,28 +1,30 @@
-import 'package:lineupmaster/data/sql_helper.dart';
+import 'package:lineupmaster/data/repositories/player_card_repository.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import '../models/team.dart';
 
 class TeamRepository {
   
-  static late sql.Database database;
+  sql.Database database;
 
-  TeamRepository();
+  TeamRepository(this.database);
 
-  static Future<int> insertTeam(Team team) async {
-    database = await SQLHelper.db();
-    return await database.insert('teams', team.toMap());
+
+  Future<int> insertTeam(Team team) async {
+    int teamId = await database.insert('teams', team.toMap());
+    PlayerCardRepository playerCardRepository = PlayerCardRepository(database);
+    await playerCardRepository.insertPlayersForTeam(teamId);
+    return teamId;
   }
 
-  static Future<List<Team>> getTeams() async {
-    database = await SQLHelper.db();
+
+  Future<List<Team>> getTeams() async {
     final List<Map<String, dynamic>> maps = await database.query('teams');
     return List.generate(maps.length, (i) {
       return Team.fromMap(maps[i]);
     });
   }
 
-  static Future<List<Team>> getIndependentTeams() async {
-    database = await SQLHelper.db();
+  Future<List<Team>> getIndependentTeams() async {
     final List<Map<String, dynamic>> maps = await database.query('teams', where: 'folder_id IS NULL');
     return List.generate(maps.length, (i) {
       return Team.fromMap(maps[i]);
@@ -30,8 +32,7 @@ class TeamRepository {
   }
 
 
-  static Future<Team> getTeamById(int teamId) async {
-    database = await SQLHelper.db();
+  Future<Team> getTeamById(int teamId) async {
     final List<Map<String, dynamic>> maps = await database.query(
       'teams',
       where: 'team_id = ?',
@@ -44,8 +45,7 @@ class TeamRepository {
   }
 
 
-  static Future<List<Team>> getTeamsByFolderId(int folderId) async {
-    database = await SQLHelper.db();
+  Future<List<Team>> getTeamsByFolderId(int folderId) async {
     final List<Map<String, dynamic>> maps = await database.query(
       'teams',
       where: 'folder_id = ?',
@@ -56,8 +56,7 @@ class TeamRepository {
     });
   }
 
-  static Future<Team?> getLastTeam() async {
-    database = await SQLHelper.db();
+  Future<Team?> getLastTeam() async {
     final teamMap = await database.query('teams', orderBy: 'team_id DESC', limit: 1);
     if (teamMap.isNotEmpty) {
       return Team.fromMap(teamMap.first);
@@ -66,8 +65,7 @@ class TeamRepository {
   }
 
 
-  static Future<int> updateTeam(Team team) async {
-    database = await SQLHelper.db();
+  Future<int> updateTeam(Team team) async {
     return await database.update(
       'teams',
       team.toMap(),
@@ -76,8 +74,7 @@ class TeamRepository {
     );
   }
   
-  static Future<int> deleteTeam(int teamId) async {
-    database = await SQLHelper.db();
+  Future<int> deleteTeam(int teamId) async {
     return await database.delete(
       'teams',
       where: 'team_id = ?',

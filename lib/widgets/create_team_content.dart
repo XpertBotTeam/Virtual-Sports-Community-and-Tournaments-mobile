@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:lineupmaster/data/models/team.dart';
 import 'package:lineupmaster/data/repositories/team_repository.dart';
+import 'package:lineupmaster/data/sql_helper.dart';
 import 'package:lineupmaster/utils/colors.dart';
 import 'package:lineupmaster/utils/utils.dart';
 import 'package:lineupmaster/widgets/appbar/custom_appbar.dart';
@@ -46,7 +47,7 @@ class _CreateTeamContentState extends State<CreateTeamContent> {
     }
   }
 
-  createTeam() {
+  createTeam() async {
     if (selectedImage == null) {
       errMsg = "Team Logo must be specified";
     }
@@ -61,7 +62,8 @@ class _CreateTeamContentState extends State<CreateTeamContent> {
         teamName: teamNameController.text,
         teamSubtitle: subtitleController.text, 
       );
-      TeamRepository.insertTeam(team);
+      TeamRepository teamRepository = TeamRepository(await SQLHelper.db());
+      teamRepository.insertTeam(team);
     }   
     setState(() {});
   }
@@ -151,7 +153,7 @@ class _CreateTeamContentState extends State<CreateTeamContent> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ElevatedButton(
-                      onPressed: () => createTeam(), 
+                      onPressed: () async => await createTeam(), 
                       style: ElevatedButton.styleFrom(backgroundColor: lightGray, padding: const EdgeInsets.fromLTRB(15, 2, 15, 2)),
                       child: const Text("Create", style: TextStyle(color: blackColor, fontSize: 15),)
                     ),

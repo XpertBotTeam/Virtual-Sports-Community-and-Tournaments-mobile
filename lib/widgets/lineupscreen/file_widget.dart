@@ -4,6 +4,7 @@ import 'package:lineupmaster/providers/page_index.dart';
 import 'package:lineupmaster/providers/page_screen.dart';
 import 'package:lineupmaster/screens/customize_screen.dart';
 import 'package:lineupmaster/utils/colors.dart';
+import 'package:lineupmaster/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class FileWidget extends StatelessWidget {
@@ -39,7 +40,11 @@ class FileWidget extends StatelessWidget {
           contentPadding: const EdgeInsets.symmetric(vertical: 3, horizontal: 40),
           dense: true,
           visualDensity: const VisualDensity(vertical: -2),
-          leading: Image(image: imagesCache[team.teamLogo]!),  
+          leading: 
+            imagesCache[team.teamLogo] != null ?
+              Image(image: imagesCache[team.teamLogo]!, height: 38, width: 35, fit: BoxFit.cover,) :
+              Image(image: MemoryImage(fromBase64ToByte(team.teamLogo)), height: 38, width: 38, fit: BoxFit.cover,),
+          
           title: Text(
             team.teamName,
             style: const TextStyle(

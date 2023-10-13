@@ -1,7 +1,7 @@
 class Team {
   int? teamId;
   String teamLogo;
-  String teamSubtitle;
+  String? teamSubtitle;
   String managerName;
   String themeColor;
   String? managerImage;
@@ -11,7 +11,7 @@ class Team {
   Team({
     this.teamId,
     required this.teamLogo,
-    required this.teamSubtitle,
+    this.teamSubtitle,
     this.managerName = "Manager Name",
     this.themeColor = "green",  
     this.managerImage,
