@@ -41,21 +41,29 @@ class _TemporaryFileWidgetState extends State<TemporaryFileWidget> {
     }
   }
 
+  // method invoked when create file is requested
   saveFile() async {
+    // checking required values are filled
     if (teamNameController.text != "" && selectedImage != null) {
+      // creating team object
       Team team = Team(
         teamLogo: base64Encode(selectedImage!),  
         teamName: teamNameController.text,
         folderId: widget.folder.folderId
       );
+      // storing team object in the db
       TeamRepository teamRepository = TeamRepository(await SQLHelper.db());
       teamRepository.insertTeam(team);
+      // removing createFile request
       widget.updateCreateFileRequested(false);
+      // updating parent component to reflect the newly created team
       widget.fetchData();
     }
+    // required values missing
     else {
       errorOccured = true;
     }
+    // rerender widget to reflect changes (if error occured color with red)
     setState(() {});
   }
   

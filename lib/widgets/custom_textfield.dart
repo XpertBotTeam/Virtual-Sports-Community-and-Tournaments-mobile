@@ -10,7 +10,16 @@ class CustomTextField extends StatelessWidget {
   final Function? onChange;
   final bool numeric ;
 
-  const CustomTextField(this.textEditingController, {super.key, this.shiny = true, this.color, this.onChange, this.numeric = false});
+  const CustomTextField(
+    this.textEditingController, 
+    {
+      super.key, 
+      this.shiny = true, 
+      this.color,
+      this.onChange, 
+      this.numeric = false
+    }
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +46,14 @@ class CustomTextField extends StatelessWidget {
             onChange!(value);
           }
         },
+        // limiting user input to numeric if requested
         inputFormatters: numeric? 
           <TextInputFormatter>[
             FilteringTextInputFormatter.allow(RegExp(r'^[0-9]*$')),
           ] :
           null ,
         decoration: const InputDecoration(
-          isDense: true,
+          isDense: true, // remove default size
           contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
           border: InputBorder.none,
         ),

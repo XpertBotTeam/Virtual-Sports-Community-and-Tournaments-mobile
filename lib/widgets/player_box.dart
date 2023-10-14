@@ -9,6 +9,7 @@ import 'package:sqflite/sqflite.dart';
 
 class PlayerBox extends StatefulWidget {
   
+  // class data fields
   final PlayerCard player;
   final double initialBoxX ;
   final double initialBoxY ;
@@ -31,12 +32,13 @@ class PlayerBox extends StatefulWidget {
 
 class _PlayerBoxState extends State<PlayerBox> {
 
+  // data fields
   double boxX = 0;
   double boxY = 0;
   final double boxWidth = 60; 
   late final Database db;
   
-
+  // initializing data fields
   @override
   void initState() {
     super.initState();
@@ -45,10 +47,12 @@ class _PlayerBoxState extends State<PlayerBox> {
     loadDb();
   }
 
+  // creating a db instance to perform crud operations
   loadDb() async {
     db = await SQLHelper.db();
   }
 
+  // open edit player dialog
   openEditPlayerDialog() async {
     showDialog(
       context: context,
@@ -56,6 +60,7 @@ class _PlayerBoxState extends State<PlayerBox> {
     );
   }
 
+  // caching player image if the image was not cached preciouslt, and returning CircleAvatar widget to display on screen
   CircleAvatar cachePlayerImage() {
     PlayerCard player = widget.player;
     widget.imagesCache[player.starterImage!] = MemoryImage(fromBase64ToByte(player.starterImage!));
@@ -65,9 +70,9 @@ class _PlayerBoxState extends State<PlayerBox> {
      );
   }
 
+
   @override
   Widget build(BuildContext context) {
-
     return Positioned(
       left: boxX,
       top: boxY,

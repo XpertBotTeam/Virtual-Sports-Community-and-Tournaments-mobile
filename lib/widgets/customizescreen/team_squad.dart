@@ -15,8 +15,11 @@ class TeamSquad extends StatefulWidget {
 
 class _TeamSquadState extends State<TeamSquad> {
 
+  // variable to cache the ImageProvider value of Base64 images to avoid converting base64 to imageProvider 
+  // every time the widget re-renders.
   Map<String, ImageProvider> imagesCache = {};
 
+  // refresh squad
   refreshSquad() {
     setState(() {});
   }
@@ -33,6 +36,7 @@ class _TeamSquadState extends State<TeamSquad> {
     });
   }
 
+  // returning pitch image based on team theme color
   AssetImage getImageFromThemeColor() {
     if (widget.themeColor == 'purple') {
       return const AssetImage("lib/assets/pitches/purple.webp") ;
@@ -51,13 +55,15 @@ class _TeamSquadState extends State<TeamSquad> {
 
   @override
   Widget build(BuildContext context) {
-
+    
+    // variables to place players on the pitch responsively 
     var width = MediaQuery.of(context).size.width;
     var fivePercent = MediaQuery.of(context).size.width * 0.05;
     var boxWidth = 60;
-    var boxHeight = boxWidth + 5 + boxWidth/4 + 3 + boxWidth/4;
-    var imageAspectRatio = 763 / 964; 
+    var boxHeight = boxWidth + 5 + boxWidth/4 + 3 + boxWidth/4; 
+    var imageAspectRatio = 763 / 964; // from image properties
 
+    // we calculate startX, startY (0), endX, endY for accurate and responsive design
     final startX = fivePercent + 10; // 10px until field start
     final endX = width - fivePercent - 10; // 
     

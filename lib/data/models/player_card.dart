@@ -1,5 +1,6 @@
 class PlayerCard {
 
+  // table fields
   int? cardId;
   String? starterImage;
   String starterName;
@@ -8,6 +9,7 @@ class PlayerCard {
   int? backupNo;
   int teamId;
 
+  // constructor
   PlayerCard({
     required this.teamId,
     this.cardId,
@@ -44,6 +46,7 @@ class PlayerCard {
     );
   }
 
+  // toString to print a PLayerCard object
   @override
   String toString() {
     return """PlayerCard { 

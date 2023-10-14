@@ -21,12 +21,17 @@ class PitchBottomSheet extends StatefulWidget {
 class _PitchBottomSheetState extends State<PitchBottomSheet> {
 
   changeThemeColor(String color) async {
+    // retrieving selectedTeam from global state
     Team team = widget.selectedTeamModel.selectedTeam!;
+    // updating team's theme color
     team.themeColor = color;
+    // storing updated team in the global state
     widget.selectedTeamModel.updateSelectedTeam(team);
+    // storing updated team in the db
     Database db = await SQLHelper.db();
     TeamRepository teamRepository = TeamRepository(db);
     teamRepository.updateTeam(team);
+    // refresh the page to reflect changes
     setState(() {});      
   }
 

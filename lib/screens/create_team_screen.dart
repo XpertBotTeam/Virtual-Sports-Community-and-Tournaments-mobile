@@ -38,14 +38,14 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
       letterSpacing: 1.05
   ); 
 
-
   @override
   void dispose() {
     super.dispose();
     teamNameController.dispose();
     subtitleController.dispose();
   }  
-  
+
+  // method to pick image from gallery and store the result in selectedImage
   pickImage(context) async {
     String? imageB64 = await pickGalleryImage(context);
     if (imageB64 != null) {
@@ -53,6 +53,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
     }
   }
 
+  // method invoked when user presses on create button
   createTeam(pageIndexModel, pageScreenModel, selectedTeamModel) async {
     if (selectedImage == null) {
       errMsg = "Team Logo must be specified";
@@ -70,6 +71,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
       );
       TeamRepository teamRepository = TeamRepository(await SQLHelper.db());
       await teamRepository.insertTeam(team);
+
       // updating global states
       Team? lastTeam = await teamRepository.getLastTeam();
       selectedTeamModel.updateSelectedTeam(lastTeam);
@@ -89,7 +91,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
     final pageIndexModel = Provider.of<PageIndexModel>(context); 
     final pageScreenModel = Provider.of<PageScreenModel>(context);
     final selectedTeamModel = Provider.of<SelectedTeamModel>(context);
-
+    
     void onGoBack() {
       if (pageIndexModel.pageIndex == 0) {
         pageScreenModel.updatePageScreen(const CustomizeScreen());

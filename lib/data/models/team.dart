@@ -1,4 +1,6 @@
 class Team {
+
+  // table fields
   int? teamId;
   String teamLogo;
   String? teamSubtitle;
@@ -8,6 +10,7 @@ class Team {
   String teamName;
   int? folderId;
  
+  // constructor
   Team({
     this.teamId,
     required this.teamLogo,
@@ -47,6 +50,7 @@ class Team {
     );
   }
 
+  // toString to print a Team object
   @override
   String toString() {
     return """

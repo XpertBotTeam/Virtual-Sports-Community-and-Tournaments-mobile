@@ -7,7 +7,7 @@ class SQLHelper {
 
   static const String DB_NAME = "lineupmaster.db";
 
-
+  // returning a db instance
   static Future<sql.Database> db() async {
 
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
@@ -27,6 +27,7 @@ class SQLHelper {
     ); 
   }
 
+  // creating tables
   static Future<void> createTables(sql.Database database) async {
     // folders table
     await database.execute("""

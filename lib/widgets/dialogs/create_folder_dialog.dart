@@ -66,6 +66,7 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
     final selectedTeamModel = Provider.of<SelectedTeamModel>(context);    
     Team? selectedTeam = selectedTeamModel.selectedTeam;
 
+    // returning appropriate color based on theme color 
     Color getButtonColor() {
       if (selectedTeam == null) {
           return primaryColor;

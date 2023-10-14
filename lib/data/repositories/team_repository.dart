@@ -4,10 +4,13 @@ import '../models/team.dart';
 
 class TeamRepository {
   
+  // class data fields
   sql.Database database;
 
+  // constructor (for dependency injection)
   TeamRepository(this.database);
 
+  // insert
   Future<int> insertTeam(Team team) async {
     int teamId = await database.insert('teams', team.toMap());
     PlayerCardRepository playerCardRepository = PlayerCardRepository(database);
@@ -15,7 +18,7 @@ class TeamRepository {
     return teamId;
   }
 
-
+  // retrieve all 
   Future<List<Team>> getTeams() async {
     final List<Map<String, dynamic>> maps = await database.query('teams');
     return List.generate(maps.length, (i) {
@@ -23,6 +26,7 @@ class TeamRepository {
     });
   }
 
+  // retrieve teams outside folders
   Future<List<Team>> getIndependentTeams() async {
     final List<Map<String, dynamic>> maps = await database.query('teams', where: 'folder_id IS NULL');
     return List.generate(maps.length, (i) {
@@ -30,8 +34,8 @@ class TeamRepository {
     });
   }
 
-
-  Future<Team> getTeamById(int teamId) async {
+  // retrieve team by id
+  Future<Team?> getTeamById(int teamId) async {
     final List<Map<String, dynamic>> maps = await database.query(
       'teams',
       where: 'team_id = ?',
@@ -40,10 +44,11 @@ class TeamRepository {
     if (maps.isNotEmpty) {
       return Team.fromMap(maps.first);
     } else {
-      throw Exception('Team not found');    }
+      return null;
+    }
   }
 
-
+  // retrieve teams by id
   Future<List<Team>> getTeamsByFolderId(int folderId) async {
     final List<Map<String, dynamic>> maps = await database.query(
       'teams',
@@ -55,6 +60,7 @@ class TeamRepository {
     });
   }
 
+  // retrieve last team
   Future<Team?> getLastTeam() async {
     final teamMap = await database.query('teams', orderBy: 'team_id DESC', limit: 1);
     if (teamMap.isNotEmpty) {
@@ -63,7 +69,7 @@ class TeamRepository {
     return null;
   }
 
-
+  // update team
   Future<int> updateTeam(Team team) async {
     return await database.update(
       'teams',
@@ -73,6 +79,7 @@ class TeamRepository {
     );
   }
   
+  // delete team
   Future<int> deleteTeam(int teamId) async {
     return await database.delete(
       'teams',
@@ -80,7 +87,6 @@ class TeamRepository {
       whereArgs: [teamId],
     );
   }
-
 
 
 }

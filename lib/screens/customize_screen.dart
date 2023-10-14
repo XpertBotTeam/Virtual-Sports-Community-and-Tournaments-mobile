@@ -14,7 +14,6 @@ import 'package:sqflite/sqflite.dart';
 
 // ignore: must_be_immutable
 class CustomizeScreen extends StatefulWidget {
-
   const CustomizeScreen({super.key}); 
 
   @override
@@ -25,8 +24,8 @@ class CustomizeScreen extends StatefulWidget {
 class _CustomizeScreenState extends State<CustomizeScreen> {
 
   List<PlayerCard>? players;
-  bool noTeamFound = false;
-  late Database db;
+  bool noTeamFound = false; // boolean value to track whether db contain teams or not
+  late Database db; 
   Team? selectedTeam;
 
   @override
@@ -68,7 +67,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // to refresh the page whenever selected team updates
+    // to refresh the page whenever selectedTeam value changes
     Provider.of<SelectedTeamModel>(context);
 
     // no team created yet

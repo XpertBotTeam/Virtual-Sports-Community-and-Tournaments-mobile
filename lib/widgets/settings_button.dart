@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lineupmaster/utils/colors.dart';
 
 class SettingsButton extends StatelessWidget {
-
+  
   final String title;
   final String image;
 

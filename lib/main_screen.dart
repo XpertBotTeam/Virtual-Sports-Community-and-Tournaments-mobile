@@ -33,6 +33,7 @@ class _MainScreenState extends State<MainScreen> {
     openChoosePitchDialog() {
       Team? selectedTeam = selectedTeamModel.selectedTeam;
 
+      // if no team selected (no team in the db), don't open pitch dialog
       if (selectedTeam == null) {
         return;
       }
@@ -51,7 +52,7 @@ class _MainScreenState extends State<MainScreen> {
 
     }
 
-
+    // updating global states based on user input
     void modifyScreenStates(int index, Widget screen) {
       pageIndexModel.updatePageIndex(index);
       pageScreenModel.updatePageScreen(screen);

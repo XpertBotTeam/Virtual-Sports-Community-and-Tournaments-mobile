@@ -32,13 +32,14 @@ class _EditPlayerBottomSheetState extends State<EditPlayerBottomSheet> {
   late TextEditingController backUpNumberController;
   late PlayerCardRepository playerCardRepository;
 
-
+  // input style used by multiple variables
   TextStyle inputCustomStyle = const TextStyle(
     letterSpacing: 1.05,
     fontWeight: FontWeight.bold,
     fontSize: 17
   );
 
+  // method allow user pick image from gallery and updating db instantly.
   pickImage(context) async {
     String? imageB64 = await pickGalleryImage(context);
     if (imageB64 != null) {
@@ -49,12 +50,14 @@ class _EditPlayerBottomSheetState extends State<EditPlayerBottomSheet> {
     }
   }
 
+  // updating player starterName value in the db 
   saveStarterName(String value) {
     widget.player.starterName = value;
     playerCardRepository.updatePlayerCard(widget.player);
     widget.refreshSquad();
   }
 
+  // updating player starterNo value in the db 
   saveStarterNo(String numb) {
     if (numb.isEmpty) {
       widget.player.starterNo = null;
@@ -66,12 +69,14 @@ class _EditPlayerBottomSheetState extends State<EditPlayerBottomSheet> {
     widget.refreshSquad();
   }
 
+  // updating card backUpName value in the db 
   saveBackupName(String value) {
     widget.player.backupName = value;
     playerCardRepository.updatePlayerCard(widget.player);
     widget.refreshSquad();
   }  
 
+  // updating card backupno value in the db 
   saveBackupNo(String value) {
     if (value.isEmpty) {
       widget.player.backupNo = null;
@@ -102,6 +107,7 @@ class _EditPlayerBottomSheetState extends State<EditPlayerBottomSheet> {
     final selectedTeamModel = Provider.of<SelectedTeamModel>(context);    
     Team? selectedTeam = selectedTeamModel.selectedTeam;
 
+    // getting appropriate color based on themeColor
     Color getButtonColor() {
       if (selectedTeam == null) {
           return primaryColor;

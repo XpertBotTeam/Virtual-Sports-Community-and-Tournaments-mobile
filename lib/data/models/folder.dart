@@ -2,11 +2,13 @@ import 'package:lineupmaster/data/models/team.dart';
 
 class Folder {
   
+  // table fields
   int? folderId;
   String folderName;
   String folderLogo;
   List<Team>? teams;
 
+  // constructor
   Folder({this.folderId, required this.folderName, required this.folderLogo, this.teams});
 
 
@@ -29,7 +31,7 @@ class Folder {
     );
   }
 
-
+  // toString to print the folder
   @override
   String toString() {
     String? teamsString = teams?.map((team) => team.toString()).join('\n');

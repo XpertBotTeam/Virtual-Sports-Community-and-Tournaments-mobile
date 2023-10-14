@@ -27,27 +27,32 @@ class _TeamInfoState extends State<TeamInfo> {
   @override
   Widget build(BuildContext context) {
 
+    // class data fields
     final pageScreenModel = Provider.of<PageScreenModel>(context);
     TextEditingController teamNameController = TextEditingController(text: widget.team.teamName);
     TextEditingController teamManagerNameController = TextEditingController(text: widget.team.managerName);
     TextEditingController teamSubtitleController= TextEditingController(text: widget.team.teamSubtitle ?? "Subtitle");
     TeamRepository teamRepository = TeamRepository(widget.db);
 
+    // updating team name in the db
     updateTeamName(newName) async {
       widget.team.teamName = newName;
       await teamRepository.updateTeam(widget.team);      
     }
 
+    // updating team managerName in the db
     updateTeamManagerName(newName) async {
       widget.team.managerName = newName;
       await teamRepository.updateTeam(widget.team);
     }
 
+    // updating team subtitle in the db
     updateSubtitle(newSubtitle) async {
       widget.team.teamSubtitle = newSubtitle;
       await teamRepository.updateTeam(widget.team);
     }
 
+    // picking manager image, storing it in the db, and updating state to reflect changes in real-time
     pickManagerImage(context) async {
       String? imageB64 = await pickGalleryImage(context);
       if (imageB64 != null) {
@@ -57,6 +62,7 @@ class _TeamInfoState extends State<TeamInfo> {
       }
     }
 
+    // picking team image, storing it in the db, and updating state to reflect changes in real-time
     pickTeamImage(context) async {
       String? imageB64 = await pickGalleryImage(context);
       if (imageB64 != null) {

@@ -69,7 +69,7 @@ class _LineUpsScreenState extends State<LineUpsScreen> {
     folders = await folderRepository.getFolders();
     teams = await teamRepository.getIndependentTeams();
 
-    // folders and teams have been initialized using await, so they are 100% not null (may be empty)
+    // folders have been initialized using await, so it's 100% not null (but may be empty)
     folders!.forEach((folder) {
       if (!imagesCache.containsKey(folder.folderLogo)) {
         ImageProvider folderImage = Image.memory(fromBase64ToByte(folder.folderLogo)).image;
@@ -77,12 +77,14 @@ class _LineUpsScreenState extends State<LineUpsScreen> {
       }      
     });  
 
+    // teams have been initialized using await, so it's 100% not null (but may be empty)
     teams!.forEach((team) {
       if (!imagesCache.containsKey(team.teamLogo)) {
         ImageProvider teamImage = Image.memory(fromBase64ToByte(team.teamLogo)).image;
         imagesCache[team.teamLogo] = teamImage;
       }      
     });
+    // update page state after fetching folders and teams
     setState(() {});
   }
 

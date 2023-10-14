@@ -3,14 +3,16 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+// converting image from base64 (string representation of the image stored in the db) to a byte 
+// value (Uint8List) so that the image can be visualized using MemoryImage() widget.
 Uint8List fromBase64ToByte(String base64Image) {
   List<int> bytes = base64Decode(base64Image);
   return Uint8List.fromList(bytes);
 } 
 
 
+// allowing user to pick image from gallery, and returning it as a base64 string
 Future<String?> pickGalleryImage(context) async {
-
   try {
     final ImagePicker imagePicker = ImagePicker();
     XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
