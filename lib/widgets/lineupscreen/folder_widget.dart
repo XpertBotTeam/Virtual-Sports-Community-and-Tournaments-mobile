@@ -68,7 +68,7 @@ class FolderWidget extends StatelessWidget {
           visualDensity: const VisualDensity(vertical: -2),
           leading:
           imagesCache[folder.folderLogo] != null ?  
-              Image(image: imagesCache[folder.folderLogo]!, height: 38, width: 35, fit: BoxFit.cover,) :
+              Image(image: imagesCache[folder.folderLogo]!, height: 38, width: 38, fit: BoxFit.cover,) :
               Image(image: MemoryImage(fromBase64ToByte(folder.folderLogo)), height: 38, width: 38, fit: BoxFit.cover,),
           
           title: Text(

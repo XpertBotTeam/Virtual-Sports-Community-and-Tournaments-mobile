@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lineupmaster/data/models/player_card.dart';
+import 'package:lineupmaster/data/models/team.dart';
 import 'package:lineupmaster/data/repositories/player_card_repository.dart';
+import 'package:lineupmaster/providers/selected_team.dart';
 import 'package:lineupmaster/utils/colors.dart';
 import 'package:lineupmaster/utils/utils.dart';
 import 'package:lineupmaster/widgets/circleavatar_with_button.dart';
 import 'package:lineupmaster/widgets/custom_textfield.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class EditPlayerBottomSheet extends StatefulWidget {
@@ -41,7 +44,6 @@ class _EditPlayerBottomSheetState extends State<EditPlayerBottomSheet> {
     if (imageB64 != null) {
       widget.player.starterImage = imageB64;
       playerCardRepository.updatePlayerCard(widget.player);
-      setState(() {}); // to refresh dialog
       widget.refreshSquad();
     }
   }
@@ -95,6 +97,29 @@ class _EditPlayerBottomSheetState extends State<EditPlayerBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+
+    final selectedTeamModel = Provider.of<SelectedTeamModel>(context);    
+    Team? selectedTeam = selectedTeamModel.selectedTeam;
+
+    Color getButtonColor() {
+      if (selectedTeam == null) {
+          return primaryColor;
+      }
+      else {
+        String themeColor = selectedTeam.themeColor;
+        if (themeColor == 'green') {
+          return primaryColor;
+        }
+        else if (themeColor == 'blue') {
+          return blueColor;
+        }
+        else if (themeColor == 'red') {
+          return redColor;
+        }
+        return purpleColor;
+      }
+    }
+    
     return AlertDialog(
       backgroundColor: backgroundColor,
       title: Row(
@@ -112,7 +137,7 @@ class _EditPlayerBottomSheetState extends State<EditPlayerBottomSheet> {
           ],
       ),
       content: SizedBox(
-        height: 450,
+        height: 420,
         width: 200,
         child: ListView(
           children: [
@@ -120,8 +145,8 @@ class _EditPlayerBottomSheetState extends State<EditPlayerBottomSheet> {
             Column(
               children: [
                 widget.player.starterImage != null ?
-                    CircleAvatarWithButton(onTap: pickImage, byteImage: fromBase64ToByte(widget.player.starterImage!), playerBox: true,) :
-                    CircleAvatarWithButton(onTap: pickImage, playerBox: true),
+                    CircleAvatarWithButton(onTap: pickImage, byteImage: fromBase64ToByte(widget.player.starterImage!), playerBox: true, buttonColor: getButtonColor()) :
+                    CircleAvatarWithButton(onTap: pickImage, playerBox: true, buttonColor: getButtonColor(),),
                 const SizedBox(height: 20),
                 // starter name
                 SizedBox(

@@ -37,6 +37,11 @@ class _LineUpsScreenState extends State<LineUpsScreen> {
     setState(() {});
   }
 
+  rerenderParentAndFetch() async {
+    fetchData();
+    setState(() {});
+  }
+
   updateCreateFileRequested(value) {
     setState(() => createFileInsideFolderRequested = value);
   }
@@ -45,7 +50,7 @@ class _LineUpsScreenState extends State<LineUpsScreen> {
     showDialog(
       context: context, 
       barrierDismissible: false, // when the user press outside the dialog it doesnt pop up
-      builder: (context) => const CreateFolderDialog()
+      builder: (context) => CreateFolderDialog(reRenderParent: rerenderParentAndFetch)
   );
 
   @override
@@ -115,10 +120,13 @@ class _LineUpsScreenState extends State<LineUpsScreen> {
                   const SizedBox(width: 5),
                   InkWell(
                     onTap: () {
+                      print("sf: ${selectedFolders.length}");
                       if (selectedFolders.isNotEmpty) {
+                        print("is not empty");
                         setState(() => createFileInsideFolderRequested = true);
                       }
                       else {
+                        print("is empty");
                         pageScreenModel.updatePageScreen(const CreateTeamScreen());
                       }                        
                     } ,

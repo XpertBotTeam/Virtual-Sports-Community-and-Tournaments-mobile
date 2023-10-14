@@ -38,8 +38,6 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
 
   fetchData() async {
     // opening db connection
-    print("Fetching data in customize");
-
     db = await SQLHelper.db();
     // creating repositories
     TeamRepository teamRepository = TeamRepository(db);
@@ -52,11 +50,10 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
     // if no team is selected previously => app is opening
     if (selectedTeam == null) {
       selectedTeam = await teamRepository.getLastTeam();
-      print("selected team is $selectedTeam");
       // if selected team still equal to null => no team stored in the db
       if (selectedTeam == null) {
         noTeamFound = true;
-        setState(() {});
+        setState(() {}); // otherwise the circular indicator will loop infinitely
         return;
       }
       else {
@@ -73,8 +70,6 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
   Widget build(BuildContext context) {
     // to refresh the page whenever selected team updates
     Provider.of<SelectedTeamModel>(context);
-
-    print("Inside customize screen");
 
     // no team created yet
     if (noTeamFound) {

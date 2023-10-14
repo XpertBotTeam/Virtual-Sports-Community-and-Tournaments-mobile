@@ -3,16 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lineupmaster/data/models/folder.dart';
+import 'package:lineupmaster/data/models/team.dart';
 import 'package:lineupmaster/data/repositories/folder_repository.dart';
 import 'package:lineupmaster/data/sql_helper.dart';
+import 'package:lineupmaster/providers/selected_team.dart';
 import 'package:lineupmaster/utils/colors.dart';
 import 'package:lineupmaster/utils/utils.dart';
 import 'package:lineupmaster/widgets/circleavatar_with_button.dart';
 import 'package:lineupmaster/widgets/custom_textfield.dart';
+import 'package:provider/provider.dart';
 
 class CreateFolderDialog extends StatefulWidget {
   
-  const CreateFolderDialog({super.key});
+  final Function reRenderParent;
+  const CreateFolderDialog({super.key, required this.reRenderParent});
 
   @override
   State<CreateFolderDialog> createState() => _CreateFolderDialogState();
@@ -24,6 +28,7 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
   Uint8List? selectedImage;
   TextEditingController folderNameController = TextEditingController();
   String? errMsg;
+
 
   createFolder() async {
     // checking image is selected
@@ -43,7 +48,7 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
       Navigator.pop(context);
     }
     // to re-render the widget since there are variables that may have have changed
-    setState(() {});
+    await widget.reRenderParent();
       
   }
 
@@ -56,6 +61,30 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
   
   @override
   Widget build(BuildContext context) {
+
+    final selectedTeamModel = Provider.of<SelectedTeamModel>(context);    
+    Team? selectedTeam = selectedTeamModel.selectedTeam;
+
+    Color getButtonColor() {
+      if (selectedTeam == null) {
+          return primaryColor;
+      }
+      else {
+        String themeColor = selectedTeam.themeColor;
+        if (themeColor == 'green') {
+          return primaryColor;
+        }
+        else if (themeColor == 'blue') {
+          return blueColor;
+        }
+        else if (themeColor == 'red') {
+          return redColor;
+        }
+        return purpleColor;
+      }
+    }
+
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus(); 
@@ -83,8 +112,8 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
           child: Column(
             children: [              
               selectedImage != null ?
-                CircleAvatarWithButton(onTap: pickImage, byteImage: selectedImage) :
-                CircleAvatarWithButton(onTap: pickImage),
+                CircleAvatarWithButton(onTap: pickImage, byteImage: selectedImage, buttonColor: getButtonColor()) :
+                CircleAvatarWithButton(onTap: pickImage, buttonColor: getButtonColor()),
               const SizedBox(height: 20),
               const SizedBox(
                 width: double.infinity,
@@ -116,7 +145,7 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: primaryColor            
+                        backgroundColor: getButtonColor()            
                     ) ,
                     onPressed: () async => await createFolder(), 
                       child: const Text("Create")

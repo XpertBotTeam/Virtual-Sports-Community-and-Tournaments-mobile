@@ -29,7 +29,6 @@ class NavBarButton extends StatelessWidget {
     Team? selectedTeam = selectedTeamModel.selectedTeam;
 
     Color getButtonColor() {
-      
       if (selectedTeam == null) {
           return primaryColor;
       }

@@ -8,7 +8,6 @@ class TeamRepository {
 
   TeamRepository(this.database);
 
-
   Future<int> insertTeam(Team team) async {
     int teamId = await database.insert('teams', team.toMap());
     PlayerCardRepository playerCardRepository = PlayerCardRepository(database);

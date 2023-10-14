@@ -45,7 +45,7 @@ class FileWidget extends StatelessWidget {
           visualDensity: const VisualDensity(vertical: -2),
           leading: 
             imagesCache[team.teamLogo] != null ?
-              Image(image: imagesCache[team.teamLogo]!, height: 38, width: 35, fit: BoxFit.cover,) :
+              Image(image: imagesCache[team.teamLogo]!, height: 38, width: 38, fit: BoxFit.cover,) :
               Image(image: MemoryImage(fromBase64ToByte(team.teamLogo)), height: 38, width: 38, fit: BoxFit.cover,),
           
           title: Text(
