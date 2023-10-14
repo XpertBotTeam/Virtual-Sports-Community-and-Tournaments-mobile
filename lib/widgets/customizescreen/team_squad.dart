@@ -58,9 +58,8 @@ class _TeamSquadState extends State<TeamSquad> {
     var boxHeight = boxWidth + 5 + boxWidth/4 + 3 + boxWidth/4;
     var imageAspectRatio = 763 / 964; 
 
-    final startX = fivePercent + 10; // 2px until field start
-    final endX = width - fivePercent - 10; // 2px for field
-    final startY = 0;
+    final startX = fivePercent + 10; // 10px until field start
+    final endX = width - fivePercent - 10; // 
     
     // calculating endY:
     var imageWidth = endX - startX;
@@ -83,6 +82,7 @@ class _TeamSquadState extends State<TeamSquad> {
             ),        
           ),
         ),
+        
         // goalkeeper  
         PlayerBox(player: widget.players[0], initialBoxX: startX+imageWidth/2 - boxWidth/2, initialBoxY: 0, refreshSquad: refreshSquad, imagesCache: imagesCache),
         // defenders
@@ -92,8 +92,8 @@ class _TeamSquadState extends State<TeamSquad> {
         PlayerBox(player: widget.players[4], initialBoxX: endX-boxWidth, initialBoxY: boxHeight*1.2, refreshSquad: refreshSquad, imagesCache: imagesCache),
         // midfielders
         PlayerBox(player: widget.players[5], initialBoxX: startX+imageWidth/2 - boxWidth/2, initialBoxY: 1.5*boxHeight, refreshSquad: refreshSquad, imagesCache: imagesCache),
-        PlayerBox(player: widget.players[6], initialBoxX: startX+1.1*boxWidth, initialBoxY: 2*boxHeight, refreshSquad: refreshSquad, imagesCache: imagesCache),
-        PlayerBox(player: widget.players[7], initialBoxX: endX-1.1*2*boxWidth, initialBoxY: 2*boxHeight, refreshSquad: refreshSquad, imagesCache: imagesCache),
+        PlayerBox(player: widget.players[6], initialBoxX: startX+1.1*boxWidth, initialBoxY: 2.2*boxHeight, refreshSquad: refreshSquad, imagesCache: imagesCache),
+        PlayerBox(player: widget.players[7], initialBoxX: endX-1.1*2*boxWidth, initialBoxY: 2.2*boxHeight, refreshSquad: refreshSquad, imagesCache: imagesCache),
         // attackers
         PlayerBox(player: widget.players[8], initialBoxX: startX, initialBoxY: endY-boxHeight*1.5, refreshSquad: refreshSquad, imagesCache: imagesCache),
         PlayerBox(player: widget.players[9], initialBoxX: endX-boxWidth, initialBoxY: endY-boxHeight*1.5, refreshSquad: refreshSquad, imagesCache: imagesCache),

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart' as sql;
 import 'package:path/path.dart';
@@ -60,7 +59,7 @@ class SQLHelper {
         starter_name VARCHAR(45),
         starter_no INT,
         backup_name VARCHAR(45),
-        backup_no INT
+        backup_no INT,
         team_id INTEGER NOT NULL,
         FOREIGN KEY (team_id) REFERENCES teams(team_id)
       )

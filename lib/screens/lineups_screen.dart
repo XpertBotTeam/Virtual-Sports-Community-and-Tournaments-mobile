@@ -64,15 +64,15 @@ class _LineUpsScreenState extends State<LineUpsScreen> {
     folders = await folderRepository.getFolders();
     teams = await teamRepository.getIndependentTeams();
 
-    // caching folder images
-    folders?.forEach((folder) {
+    // folders and teams have been initialized using await, so they are 100% not null (may be empty)
+    folders!.forEach((folder) {
       if (!imagesCache.containsKey(folder.folderLogo)) {
         ImageProvider folderImage = Image.memory(fromBase64ToByte(folder.folderLogo)).image;
         imagesCache[folder.folderLogo] = folderImage;
       }      
-    });
-    // caching team images
-    teams?.forEach((team) {
+    });  
+
+    teams!.forEach((team) {
       if (!imagesCache.containsKey(team.teamLogo)) {
         ImageProvider teamImage = Image.memory(fromBase64ToByte(team.teamLogo)).image;
         imagesCache[team.teamLogo] = teamImage;
@@ -136,6 +136,12 @@ class _LineUpsScreenState extends State<LineUpsScreen> {
             // returning folders,
             Column(
               children: [
+                // if there are no folders
+                if (folders!.isEmpty)
+                  const Center(
+                    child: Text("No folders yet."),
+                  ),
+
                 ...folders!.map((folder) {
                   return FolderWidget(
                     folder,
@@ -156,6 +162,11 @@ class _LineUpsScreenState extends State<LineUpsScreen> {
             // returning teams,
             Column(
               children: [
+                 if (folders!.isEmpty)
+                  const Center(
+                    child: Text("No teams yet."),
+                  ),
+
                 ...teams!.map((team) {
                   return FileWidget(team, imagesCache: imagesCache);
                 }).toList()

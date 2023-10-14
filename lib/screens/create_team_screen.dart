@@ -35,7 +35,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
       fontSize: 17,
       fontWeight: FontWeight.w500,
       letterSpacing: 1.05
-    ); 
+  ); 
 
 
   @override

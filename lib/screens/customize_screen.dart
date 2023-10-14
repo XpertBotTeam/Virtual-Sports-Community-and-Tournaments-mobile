@@ -6,9 +6,9 @@ import 'package:lineupmaster/data/repositories/team_repository.dart';
 import 'package:lineupmaster/data/sql_helper.dart';
 import 'package:lineupmaster/providers/selected_team.dart';
 import 'package:lineupmaster/utils/utils.dart';
-import 'package:lineupmaster/widgets/customize_screen/team_info.dart';
+import 'package:lineupmaster/widgets/customizescreen/team_info.dart';
 import 'package:lineupmaster/utils/colors.dart';
-import 'package:lineupmaster/widgets/customize_screen/team_squad.dart';
+import 'package:lineupmaster/widgets/customizescreen/team_squad.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -51,7 +51,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
     if (selectedTeam == null) {
       selectedTeam = await teamRepository.getLastTeam();
 
-      // if selected team still equal to null => db has no team
+      // if selected team still equal to null => no team stored in the db
       if (selectedTeam == null) {
         noTeamFound = true;
         return;
@@ -74,7 +74,7 @@ class _CustomizeScreenState extends State<CustomizeScreen> {
 
     // no team created yet
     if (noTeamFound) {
-      return const Center(child: Text("Please create and select a team"));
+      return const Center(child: Text("No teams yet."));
     }
     // data not loaded yet
     if (players == null || selectedTeam == null) {
