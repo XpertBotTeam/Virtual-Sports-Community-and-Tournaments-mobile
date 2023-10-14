@@ -45,8 +45,8 @@ class FileWidget extends StatelessWidget {
           visualDensity: const VisualDensity(vertical: -2),
           leading: 
             imagesCache[team.teamLogo] != null ?
-              Image(image: imagesCache[team.teamLogo]!, height: 38, width: 38, fit: BoxFit.cover,) :
-              Image(image: MemoryImage(fromBase64ToByte(team.teamLogo)), height: 38, width: 38, fit: BoxFit.cover,),
+              Image(image: imagesCache[team.teamLogo]!, height: 38, width: 38, fit: BoxFit.contain,) :
+              Image(image: MemoryImage(fromBase64ToByte(team.teamLogo)), height: 38, width: 38, fit: BoxFit.contain,),
           
           title: Text(
             team.teamName,
@@ -54,9 +54,17 @@ class FileWidget extends StatelessWidget {
               fontSize: 17,
               fontWeight: FontWeight.w500
             )
-          )
-        ),
+          ),
+          // trailing: ElevatedButton(
+          //   onPressed: () async {
+          //     final db = await SQLHelper.db();
+          //     TeamRepository teamRepository = TeamRepository(db);
+          //     teamRepository.deleteTeam(team.teamId!); 
+          //   }, 
+          //   child: Text("deleete"),
+        // ),
       ),
+      )
     );
   }
 }

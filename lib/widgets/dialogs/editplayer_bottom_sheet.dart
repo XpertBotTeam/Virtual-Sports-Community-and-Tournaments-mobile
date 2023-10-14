@@ -44,6 +44,7 @@ class _EditPlayerBottomSheetState extends State<EditPlayerBottomSheet> {
     if (imageB64 != null) {
       widget.player.starterImage = imageB64;
       playerCardRepository.updatePlayerCard(widget.player);
+      setState(() {});
       widget.refreshSquad();
     }
   }

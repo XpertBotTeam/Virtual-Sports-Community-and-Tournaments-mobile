@@ -170,7 +170,7 @@ class _LineUpsScreenState extends State<LineUpsScreen> {
             // returning teams,
             Column(
               children: [
-                 if (folders!.isEmpty)
+                 if (teams!.isEmpty)
                   const Center(
                     child: Text("No teams yet."),
                   ),

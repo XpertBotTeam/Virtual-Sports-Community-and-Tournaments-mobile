@@ -48,6 +48,7 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
       Navigator.pop(context);
     }
     // to re-render the widget since there are variables that may have have changed
+    setState(() {});
     await widget.reRenderParent();
       
   }
@@ -55,7 +56,7 @@ class _CreateFolderDialogState extends State<CreateFolderDialog> {
   pickImage(context) async {
     String? imageB64 = await pickGalleryImage(context);
     if (imageB64 != null) {
-      setState(() { selectedImage = fromBase64ToByte(imageB64); });
+      setState(() => selectedImage = fromBase64ToByte(imageB64));
     }
   }
   

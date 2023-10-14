@@ -81,7 +81,7 @@ class _TeamInfoState extends State<TeamInfo> {
                     Flexible(
                       child: InkWell(
                         onTap: () async => await pickTeamImage(context),
-                        child: Image.memory(fromBase64ToByte(widget.team.teamLogo), width: 45, height: 45, fit: BoxFit.cover)
+                        child: Image.memory(fromBase64ToByte(widget.team.teamLogo), width: 45, height: 45, fit: BoxFit.contain)
                       )
                     ),
                     const SizedBox(width: 10),
