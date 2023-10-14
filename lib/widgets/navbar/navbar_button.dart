@@ -31,7 +31,7 @@ class NavBarButton extends StatelessWidget {
     Color getButtonColor() {
       
       if (selectedTeam == null) {
-          return blackColor;
+          return primaryColor;
       }
       else {
         String themeColor = selectedTeam.themeColor;
@@ -48,13 +48,13 @@ class NavBarButton extends StatelessWidget {
       }
     }
     
-    return ElevatedButton(
-      style: const ButtonStyle(
-        backgroundColor: MaterialStatePropertyAll(Colors.transparent), // removing default bg color
-        shadowColor: MaterialStatePropertyAll(Colors.transparent) , // removing shadow of the button
-        overlayColor: MaterialStatePropertyAll(Colors.transparent) // removing effect when we click
+   return InkWell(
+    onTap: _onPressed,
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(8), // Adjust the radius if needed
       ),
-      onPressed: _onPressed, 
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -68,11 +68,13 @@ class NavBarButton extends StatelessWidget {
             _label,
             style: TextStyle(
               color: !_isSelected ? blackColor : getButtonColor(),
-              fontWeight: FontWeight.bold
+              fontWeight: FontWeight.bold,
             ),
-          )
+          ),
         ],
-      ) 
-    ) ;
+      ),
+    ),
+  );
+    
   }
 }

@@ -3,7 +3,7 @@ import 'package:lineupmaster/screens/customize_screen.dart';
 
 class PageScreenModel extends ChangeNotifier {
 
-  Widget _pageScreen = CustomizeScreen();
+  Widget _pageScreen = const CustomizeScreen();
 
   Widget get pageScreen => _pageScreen;
 

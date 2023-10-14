@@ -52,11 +52,9 @@ class _MainScreenState extends State<MainScreen> {
     }
 
 
-    void modifyScreenStates(int index, Widget? screen) {
+    void modifyScreenStates(int index, Widget screen) {
       pageIndexModel.updatePageIndex(index);
-      if (screen != null) {
-        pageScreenModel.updatePageScreen(screen);
-      }
+      pageScreenModel.updatePageScreen(screen);
     }
 
     return Scaffold(
