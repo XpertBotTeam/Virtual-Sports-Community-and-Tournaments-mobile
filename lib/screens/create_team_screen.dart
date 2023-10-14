@@ -6,6 +6,7 @@ import 'package:lineupmaster/data/repositories/team_repository.dart';
 import 'package:lineupmaster/data/sql_helper.dart';
 import 'package:lineupmaster/providers/page_index.dart';
 import 'package:lineupmaster/providers/page_screen.dart';
+import 'package:lineupmaster/providers/selected_team.dart';
 import 'package:lineupmaster/screens/customize_screen.dart';
 import 'package:lineupmaster/screens/lineups_screen.dart';
 import 'package:lineupmaster/utils/colors.dart';
@@ -52,7 +53,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
     }
   }
 
-  createTeam() async {
+  createTeam(pageIndexModel, pageScreenModel, selectedTeamModel) async {
     if (selectedImage == null) {
       errMsg = "Team Logo must be specified";
     }
@@ -68,8 +69,16 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
         teamSubtitle: subtitleController.text, 
       );
       TeamRepository teamRepository = TeamRepository(await SQLHelper.db());
-      teamRepository.insertTeam(team);
-
+      await teamRepository.insertTeam(team);
+      // updating global states
+      Team? lastTeam = await teamRepository.getLastTeam();
+      selectedTeamModel.updateSelectedTeam(lastTeam);
+      if (pageIndexModel.pageIndex == 0) {
+        pageScreenModel.updatePageScreen(const CustomizeScreen());
+      }
+      else {
+        pageScreenModel.updatePageScreen(const LineUpsScreen());                          
+      }
     }   
     setState(() {});
   }
@@ -79,10 +88,11 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
   Widget build(BuildContext context) {    
     final pageIndexModel = Provider.of<PageIndexModel>(context); 
     final pageScreenModel = Provider.of<PageScreenModel>(context);
+    final selectedTeamModel = Provider.of<SelectedTeamModel>(context);
 
     void onGoBack() {
       if (pageIndexModel.pageIndex == 0) {
-        pageScreenModel.updatePageScreen(CustomizeScreen());
+        pageScreenModel.updatePageScreen(const CustomizeScreen());
       }
       else {
         pageScreenModel.updatePageScreen(const LineUpsScreen());
@@ -172,15 +182,7 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
-                        onPressed: () async {
-                          await createTeam();
-                          if (pageIndexModel.pageIndex == 0) {
-                            pageScreenModel.updatePageScreen(CustomizeScreen());
-                          }
-                          else {
-                            pageScreenModel.updatePageScreen(const LineUpsScreen());                          
-                          }
-                        } , 
+                        onPressed: () async => await createTeam(pageIndexModel, pageScreenModel, selectedTeamModel), 
                         style: ElevatedButton.styleFrom(backgroundColor: lightGray, padding: const EdgeInsets.fromLTRB(15, 2, 15, 2)),
                         child: const Text("Create", style: TextStyle(color: blackColor, fontSize: 15),)
                       ),

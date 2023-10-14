@@ -55,13 +55,13 @@ class FileWidget extends StatelessWidget {
               fontWeight: FontWeight.w500
             )
           ),
-          // trailing: ElevatedButton(
-          //   onPressed: () async {
-          //     final db = await SQLHelper.db();
-          //     TeamRepository teamRepository = TeamRepository(db);
-          //     teamRepository.deleteTeam(team.teamId!); 
-          //   }, 
-          //   child: Text("deleete"),
+        //   trailing: ElevatedButton(
+        //     onPressed: () async {
+        //       final db = await SQLHelper.db();
+        //       TeamRepository teamRepository = TeamRepository(db);
+        //       teamRepository.deleteTeam(team.teamId!); 
+        //     }, 
+        //     child: const Text("deleete"),
         // ),
       ),
       )
