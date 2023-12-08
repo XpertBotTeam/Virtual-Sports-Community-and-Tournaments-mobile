@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lineupmaster/data/models/team.dart';
 import 'package:lineupmaster/data/repositories/team_repository.dart';
@@ -15,7 +14,6 @@ import 'package:lineupmaster/widgets/appbar/custom_appbar.dart';
 import 'package:lineupmaster/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
 
-
 class CreateTeamScreen extends StatefulWidget {
   const CreateTeamScreen({super.key});
 
@@ -24,79 +22,76 @@ class CreateTeamScreen extends StatefulWidget {
 }
 
 class _CreateTeamScreenState extends State<CreateTeamScreen> {
-
   TextEditingController teamNameController = TextEditingController();
   TextEditingController subtitleController = TextEditingController();
-  Uint8List? selectedImage;
+  String? selectedImagePath;
   String errMsg = "";
 
-  TextStyle customTextStyle = 
-    const TextStyle(
+  TextStyle customTextStyle = const TextStyle(
       color: whiteColor,
       fontSize: 17,
       fontWeight: FontWeight.w500,
-      letterSpacing: 1.05
-  ); 
+      letterSpacing: 1.05);
 
   @override
   void dispose() {
     super.dispose();
     teamNameController.dispose();
     subtitleController.dispose();
-  }  
+  }
 
   // method to pick image from gallery and store the result in selectedImage
   pickImage(context) async {
-    String? imageB64 = await pickGalleryImage(context);
-    if (imageB64 != null) {
-      setState(() { selectedImage = fromBase64ToByte(imageB64); });
+    // String? imageB64 = await pickGalleryImage(context);
+    String? storedImagePath = await pickAndDuplicateImage(context);
+
+    if (storedImagePath != null) {
+      setState(() {
+        selectedImagePath = storedImagePath;
+      });
     }
   }
 
   // method invoked when user presses on create button
   createTeam(pageIndexModel, pageScreenModel, selectedTeamModel) async {
-    if (selectedImage == null) {
+    if (selectedImagePath == null) {
       errMsg = "Team Logo must be specified";
-    }
-    else if (teamNameController.text == "") {
+    } else if (teamNameController.text == "") {
       errMsg = "Team Name must be specified";
-    }
-    else {
-      // create team 
+    } else {
+      // no err => create team
       errMsg = "";
       Team team = Team(
-        teamLogo: base64Encode(selectedImage!), 
+        teamLogo: selectedImagePath!,
         teamName: teamNameController.text,
-        teamSubtitle: subtitleController.text, 
+        teamSubtitle: subtitleController.text,
       );
       TeamRepository teamRepository = TeamRepository(await SQLHelper.db());
       await teamRepository.insertTeam(team);
 
-      // updating global states
+      // updating provider states
       Team? lastTeam = await teamRepository.getLastTeam();
       selectedTeamModel.updateSelectedTeam(lastTeam);
       if (pageIndexModel.pageIndex == 0) {
         pageScreenModel.updatePageScreen(const CustomizeScreen());
+      } else {
+        pageScreenModel.updatePageScreen(const LineUpsScreen());
       }
-      else {
-        pageScreenModel.updatePageScreen(const LineUpsScreen());                          
-      }
-    }   
+    }
+    // to re-render page
     setState(() {});
   }
 
-
   @override
-  Widget build(BuildContext context) {    
-    final pageIndexModel = Provider.of<PageIndexModel>(context); 
+  Widget build(BuildContext context) {
+    final pageIndexModel = Provider.of<PageIndexModel>(context);
     final pageScreenModel = Provider.of<PageScreenModel>(context);
     final selectedTeamModel = Provider.of<SelectedTeamModel>(context);
-    
+
     void onGoBack() {
       if (pageIndexModel.pageIndex == 0) {
         pageScreenModel.updatePageScreen(const CustomizeScreen());
-      }
-      else {
+      } else {
         pageScreenModel.updatePageScreen(const LineUpsScreen());
       }
     }
@@ -104,8 +99,10 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(MediaQuery.of(context).size.height / 12),
-          child: CustomAppBar("Create New Team", canNavigateBack: true, goBack: onGoBack),
+          preferredSize:
+              Size.fromHeight(MediaQuery.of(context).size.height / 12),
+          child: CustomAppBar("Create New Team",
+              canNavigateBack: true, goBack: onGoBack),
         ),
         body: Stack(
           children: [
@@ -122,80 +119,80 @@ class _CreateTeamScreenState extends State<CreateTeamScreen> {
             Opacity(
               opacity: 0.7,
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.black
-                ),
+                decoration: const BoxDecoration(color: Colors.black),
               ),
             ),
             // layer 3: content
             Container(
-              margin: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width / 8) ,
+              margin: EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width / 8),
               child: ListView(
                 children: [
                   const SizedBox(height: 30),
-                
-                  selectedImage == null ?
-                    const Center(
-                      child: CircleAvatar(
-                          backgroundImage: AssetImage("lib/assets/others/no image.jpg"),
-                          radius: 40
-                      ),
-                    ) :
-                    Center(
-                      child: CircleAvatar(
-                          backgroundImage: MemoryImage(selectedImage!),
-                          radius: 40
-                      ),
-                    ),
-                   
-                  const SizedBox(height: 10), 
+                  selectedImagePath == null
+                      ? const Center(
+                          child: CircleAvatar(
+                              backgroundImage:
+                                  AssetImage("lib/assets/others/no image.jpg"),
+                              radius: 40),
+                        )
+                      : Center(
+                          child: CircleAvatar(
+                              backgroundImage: FileImage(File(selectedImagePath!)),
+                              radius: 40),
+                        ),
+                  const SizedBox(height: 10),
                   Center(
                     child: ElevatedButton(
-                      onPressed: () => pickImage(context), 
-                      style: ElevatedButton.styleFrom(backgroundColor: lightGray, padding: const EdgeInsets.fromLTRB(15, 2, 15, 2)),
-                      child: 
-                        selectedImage == null ?
-                          const Text("Select Logo", style: TextStyle(color: blackColor, fontSize: 15)):
-                          const Text("Change Logo", style: TextStyle(color: blackColor, fontSize: 15))
-                    ),
+                        onPressed: () => pickImage(context),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: lightGray,
+                            padding: const EdgeInsets.fromLTRB(15, 2, 15, 2)),
+                        child: selectedImagePath == null
+                            ? const Text("Select Logo",
+                                style:
+                                    TextStyle(color: blackColor, fontSize: 15))
+                            : const Text("Change Logo",
+                                style: TextStyle(
+                                    color: blackColor, fontSize: 15))),
                   ),
-                  const SizedBox(height: 15), 
+                  const SizedBox(height: 15),
                   Text("NAME", style: customTextStyle),
                   CustomTextField(teamNameController, shiny: false),
-                  
-                  const SizedBox(height: 15), 
+                  const SizedBox(height: 15),
                   Text("SUBTITLE", style: customTextStyle),
                   CustomTextField(subtitleController, shiny: false),
-                
-                  errMsg != "" ? 
-                    Center(
-                      child: Text(
-                        errMsg,
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 16                         
-                        ),
-                      )
-                    )
-                    : Container(),
-                
-                  const SizedBox(height: 15), 
+                  errMsg != ""
+                      ? Center(
+                          child: Text(
+                          errMsg,
+                          style:
+                              const TextStyle(color: Colors.red, fontSize: 16),
+                        ))
+                      : Container(),
+                  const SizedBox(height: 15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       ElevatedButton(
-                        onPressed: () async => await createTeam(pageIndexModel, pageScreenModel, selectedTeamModel), 
-                        style: ElevatedButton.styleFrom(backgroundColor: lightGray, padding: const EdgeInsets.fromLTRB(15, 2, 15, 2)),
-                        child: const Text("Create", style: TextStyle(color: blackColor, fontSize: 15),)
-                      ),
+                          onPressed: () async => await createTeam(
+                              pageIndexModel,
+                              pageScreenModel,
+                              selectedTeamModel),
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: lightGray,
+                              padding: const EdgeInsets.fromLTRB(15, 2, 15, 2)),
+                          child: const Text(
+                            "Create",
+                            style: TextStyle(color: blackColor, fontSize: 15),
+                          )),
                     ],
                   ),
-                
                 ],
-                    ),
+              ),
             ),
           ],
-        ), 
+        ),
       ),
     );
   }

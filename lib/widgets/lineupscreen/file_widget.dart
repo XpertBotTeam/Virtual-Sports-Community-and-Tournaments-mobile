@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:lineupmaster/data/models/team.dart';
 import 'package:lineupmaster/providers/page_index.dart';
@@ -5,66 +7,45 @@ import 'package:lineupmaster/providers/page_screen.dart';
 import 'package:lineupmaster/providers/selected_team.dart';
 import 'package:lineupmaster/screens/customize_screen.dart';
 import 'package:lineupmaster/utils/colors.dart';
-import 'package:lineupmaster/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 class FileWidget extends StatelessWidget {
-
   final Team team;
-  final Map<String, ImageProvider> imagesCache;
-  final bool insideFolder;  
+  final bool insideFolder;
 
-  const FileWidget(this.team, {super.key, required this.imagesCache, this.insideFolder = false});
+  const FileWidget(this.team, {super.key, this.insideFolder = false});
 
   @override
   Widget build(BuildContext context) {
-    
     final pageScreenModel = Provider.of<PageScreenModel>(context);
-    final pageIndexModel = Provider.of<PageIndexModel>(context); 
-    final selectedTeamModel = Provider.of<SelectedTeamModel>(context); 
+    final pageIndexModel = Provider.of<PageIndexModel>(context);
+    final selectedTeamModel = Provider.of<SelectedTeamModel>(context);
 
     return InkWell(
-      onTap: () { 
-        selectedTeamModel.updateSelectedTeam(team);
-        pageIndexModel.updatePageIndex(0);
-        pageScreenModel.updatePageScreen(const CustomizeScreen());
-      },
-      child: Container(
-        height: 50,
-        decoration: BoxDecoration(
-          color: insideFolder? lightGray : creamColor,
-          border: Border.symmetric(
-            horizontal: BorderSide(
-              color: secondaryColor,
-            ),
-          )
-        ),
-        child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(vertical: 3, horizontal: 40),
-          dense: true,
-          visualDensity: const VisualDensity(vertical: -2),
-          leading: 
-            imagesCache[team.teamLogo] != null ?
-              Image(image: imagesCache[team.teamLogo]!, height: 38, width: 38, fit: BoxFit.contain,) :
-              Image(image: MemoryImage(fromBase64ToByte(team.teamLogo)), height: 38, width: 38, fit: BoxFit.contain,),
-          
-          title: Text(
-            team.teamName,
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500
-            )
+        onTap: () {
+          selectedTeamModel.updateSelectedTeam(team);
+          pageIndexModel.updatePageIndex(0);
+          pageScreenModel.updatePageScreen(const CustomizeScreen());
+        },
+        child: Container(
+          height: 50,
+          decoration: BoxDecoration(
+              color: insideFolder ? lightGray : creamColor,
+              border: Border.symmetric(
+                horizontal: BorderSide(
+                  color: secondaryColor,
+                ),
+              )),
+          child: ListTile(
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 3, horizontal: 40),
+            dense: true,
+            visualDensity: const VisualDensity(vertical: -2),
+            leading: Image.file(File(team.teamLogo)),
+            title: Text(team.teamName,
+                style:
+                    const TextStyle(fontSize: 17, fontWeight: FontWeight.w500)),
           ),
-        //   trailing: ElevatedButton(
-        //     onPressed: () async {
-        //       final db = await SQLHelper.db();
-        //       TeamRepository teamRepository = TeamRepository(db);
-        //       teamRepository.deleteTeam(team.teamId!); 
-        //     }, 
-        //     child: const Text("deleete"),
-        // ),
-      ),
-      )
-    );
+        ));
   }
 }
